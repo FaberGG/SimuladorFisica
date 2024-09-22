@@ -2,10 +2,12 @@ import React from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import BarWithSpheres from "./BarWithSpheres";
+import Protractor from "./Protractor";
 
 export default function ScenePendulo({
   dimensions,
-  calculateAngle,
+  setAllTimeVars,
+  position,
   isAnimating,
   reset,
 }) {
@@ -15,7 +17,8 @@ export default function ScenePendulo({
   // Posiciones calculadas
   const ceilingHeight = 4 * dimensions.r * dimensions.l;
   const wireHeight = ceilingHeight / 2;
-  const wireRadius = 0.01 * dimensions.r * dimensions.l;
+  const wireRadius =
+    (0.1 * dimensions.r) / 4 + (dimensions.l * (0.03 * dimensions.r)) / 2;
 
   return (
     <Canvas style={canvasStyle}>
@@ -43,24 +46,14 @@ export default function ScenePendulo({
         <meshStandardMaterial color="white" metalness={0.7} roughness={0.3} />
       </mesh>
 
-      {/* Marcador posición inicial (la bolita) */}
-      {/* <mesh position={[dimensions.l / 2, 0, 0]}>
-        <sphereGeometry args={[0.05, 32, 32]} />
-        <meshStandardMaterial color="yellow" metalness={0.5} roughness={0.4} />
-      </mesh> */}
-      {/* <axesHelper args={[dimensions.l]} /> */}
-
-      {/* Marcador posicion inicial (la bolita)*/}
-      {/* <mesh position={[dimensions.l / 2, 0, 0]}>
-        <sphereGeometry args={[0.05, 32, 32]} />
-        <meshStandardMaterial color="yellow" metalness={0.5} roughness={0.4} />
-      </mesh> */}
-
+      <axesHelper args={[dimensions.l]} />
+      {/* TRANSPORTADOR PARA TENER REFERENCIA DEL ANGULO */}
+      <Protractor length={dimensions.l / 2} />
       <BarWithSpheres
         length={dimensions.l}
         radius={dimensions.r}
-        kTorsion={dimensions.k}
-        calculateAngle={calculateAngle}
+        setAllTimeVars={setAllTimeVars}
+        position={position} //angulo theta a mostrar
         isAnimating={isAnimating}
         reset={reset}
       ></BarWithSpheres>

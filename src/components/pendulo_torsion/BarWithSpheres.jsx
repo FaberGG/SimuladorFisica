@@ -3,11 +3,11 @@ import { useRef, useState, useEffect } from "react";
 import React from "react";
 import * as THREE from "three"; // Asegúrate de importar THREE
 
-function Sphere({ radius, xPosition }) {
+function Sphere({ radius, xPosition, color }) {
   return (
     <mesh position={[xPosition, 0, 0]}>
       <sphereGeometry args={[radius, 32, 32]} />
-      <meshStandardMaterial color="red" metalness={0.5} roughness={0.4} />
+      <meshStandardMaterial color={color} metalness={0.5} roughness={0.4} />
     </mesh>
   );
 }
@@ -15,7 +15,8 @@ function Sphere({ radius, xPosition }) {
 export default function BarWithSpheres({
   length,
   radius,
-  calculateAngle,
+  setAllTimeVars,
+  position,
   isAnimating,
   reset,
 }) {
@@ -45,10 +46,9 @@ export default function BarWithSpheres({
     if (isAnimating) {
       const currentElapsedTime = clockRef.current.getElapsedTime();
       const totalElapsedTime = elapsedTime + currentElapsedTime; // Tiempo total transcurrido
-      console.log(currentElapsedTime + " -- " + totalElapsedTime);
-      const angle = calculateAngle(totalElapsedTime);
-      groupRef.current.rotation.y = angle;
+      setAllTimeVars(totalElapsedTime);
     }
+    groupRef.current.rotation.y = position;
   });
   return (
     <>
@@ -56,15 +56,19 @@ export default function BarWithSpheres({
         {/* Barra */}
         <mesh>
           <boxGeometry
-            args={[length, 0.1 * radius * length, 0.1 * radius * length]}
+            args={[
+              length,
+              (0.1 * radius) / 2 + length * (0.03 * radius),
+              (0.1 * radius) / 2 + length * (0.03 * radius),
+            ]}
           />
           <meshStandardMaterial color="white" metalness={0.6} roughness={0.1} />
         </mesh>
 
         {/* Esfera en el extremo izquierdo */}
-        <Sphere radius={radius} xPosition={-length / 2} />
+        <Sphere radius={radius} xPosition={-length / 2} color="blue" />
         {/* Esfera en el extremo derecho */}
-        <Sphere radius={radius} xPosition={length / 2} />
+        <Sphere radius={radius} xPosition={length / 2} color="red" />
       </group>
     </>
   );

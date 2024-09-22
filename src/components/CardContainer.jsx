@@ -14,7 +14,7 @@ export default function CardContainer() {
           title="Pendulo de torsion"
           copy="voluptates, architecto, magnam deserunt sed possimus. accusamus?"
           url="pendulo-torsion"
-          imageUrl=""
+          imageUrl={imgPenduloTorsion}
         />
       </div>
     </div>

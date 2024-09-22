@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function Card(Props) {
   const navigate = useNavigate();
   const handleClick = () => {
-    navigate("/" + Props.url);
+    navigate("/SimuladorFisica/" + Props.url);
   };
 
   const style = {

@@ -1,6 +1,6 @@
 import React from "react";
 
-export const FormInput = ({ label, name, disabled, value, onChange }) => {
+export const FormInput = ({ label, name, disabled, value, onChange, min }) => {
   return (
     <div>
       <div className="form-input-label">
@@ -15,6 +15,7 @@ export const FormInput = ({ label, name, disabled, value, onChange }) => {
           name={name}
           className="form-input-input"
           disabled={disabled}
+          min={min}
         />
       </div>
     </div>

@@ -13,7 +13,10 @@ function App() {
           path="/SimuladorFisica"
           element={<CardContainer></CardContainer>}
         ></Route>
-        <Route path="pendulo-torsion" element={<PenduloTorsionMain />}></Route>
+        <Route
+          path="/SimuladorFisica/pendulo-torsion"
+          element={<PenduloTorsionMain />}
+        ></Route>
       </Routes>
     </>
   );
