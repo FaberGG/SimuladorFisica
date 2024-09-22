@@ -1,0 +1,53 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+html,
+body,
+div#root {
+  height: 100%;
+}
+
+/* contenedor de controles formulario y la escena */
+.form-scene-container {
+  @media (min-width: 600px) {
+    display: flex;
+  }
+  /* linea temp */
+  display: flex;
+}
+
+/* fondo de estrellas */
+.stars,
+.twinkling {
+  position: fixed;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+.stars {
+  z-index: -2;
+  background: #000 url("https://i.imgur.com/YKY28eT.png") repeat top center;
+}
+.twinkling {
+  z-index: -1;
+  background: transparent url("https://i.imgur.com/XYMF4ca.png") repeat top
+    center;
+  animation: move-twink-back 200s linear infinite;
+}
+@keyframes move-twink-back {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -10000px 5000px;
+  }
+}

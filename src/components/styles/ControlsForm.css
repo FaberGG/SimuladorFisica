@@ -1,0 +1,43 @@
+.controls-form-container {
+  padding-top: 1%;
+  padding-left: 2%;
+  width: 60vh;
+  height: 100vh;
+
+  @media (max-width: 600px) {
+    width: 60vh;
+  }
+}
+
+.controls-form-card {
+  /* dimensiones */
+  width: 100%;
+  min-height: 50%;
+  height: auto;
+
+  border-radius: 1% 1% 1% 1%;
+
+  /* temporal */
+  background-color: rgb(124, 124, 149);
+}
+
+.controls-form-header {
+  height: 5vh;
+  width: 100%;
+  display: flex;
+  padding: 5%;
+  justify-content: space-between;
+  align-content: center;
+  flex-wrap: wrap;
+  color: white;
+  font-size: large;
+  background-color: rgb(34, 41, 46);
+}
+
+.controls-form-btn {
+  width: 35%;
+}
+.controls-form-title {
+  width: 65%;
+  font: bold;
+}

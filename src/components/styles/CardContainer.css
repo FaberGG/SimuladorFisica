@@ -1,0 +1,29 @@
+.card-container {
+  place-items: center;
+  height: 100%;
+  display: grid;
+  align-content: space-around;
+}
+.page-content {
+  display: flex;
+  grid-gap: 1rem;
+  padding: 1rem;
+  max-width: 1024px;
+  margin: 0 auto;
+  font-family: var(--font-sans);
+
+  @media (max-width: 1080px) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media (max-width: 600px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+  @media (min-width: 800px) {
+    display: flex;
+  }
+}
