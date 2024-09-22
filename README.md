@@ -42,7 +42,7 @@ cd SimuladorFisica
 Luego, instala las dependencias:
 
 ```bash
-npm instal
+npm install
 ```
 
 ## Ejecutar el Proyecto
