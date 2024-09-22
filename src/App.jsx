@@ -9,7 +9,10 @@ function App() {
       <Routes>
         {/* se renderizan las rutas
         (segun la ruta en el url renderiza el compenente correspondiente) */}
-        <Route path="/" element={<CardContainer></CardContainer>}></Route>
+        <Route
+          path="/SimuladorFisica"
+          element={<CardContainer></CardContainer>}
+        ></Route>
         <Route path="pendulo-torsion" element={<PenduloTorsionMain />}></Route>
       </Routes>
     </>
