@@ -195,11 +195,11 @@ export const PenduloTorsionMain = () => {
           initConditions={initConditions}
           onInitConditionChange={updateInitConditions}
           variables={variables}
-          time={time.toFixed(2)}
-          position={position.toFixed(2)}
-          velocity={velocity.toFixed(2)}
-          amplitude={amplitude.toFixed(2)}
-          energy={energy.toFixed(2)}
+          time={time}
+          position={position}
+          velocity={velocity}
+          amplitude={amplitude}
+          energy={energy}
         />
         <ScenePendulo
           dimensions={dimensions}
