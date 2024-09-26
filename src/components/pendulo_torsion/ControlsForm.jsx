@@ -26,6 +26,9 @@ export const ControlsForm = ({
   const initConditionsInputChange = (name, value) => {
     onInitConditionChange(name, value);
   };
+  const initConditionsInputChangeGrades = (name, value) => {
+    onInitConditionChange(name, value*(Math.PI/180));
+  };
 
   return (
     <div className="controls-form-container">
@@ -90,7 +93,14 @@ export const ControlsForm = ({
           </label>
           <form className="controls-form-inputs-form">
             <FormInput
-              label="Posicion inicial"
+              label="Posicion inicial (Grados)"
+              value={initConditions.position *(180/Math.PI)}
+              name="position"
+              onChange={initConditionsInputChangeGrades}
+              disabled={isAnimating}
+            />
+            <FormInput
+              label="Posicion inicial (Rad)"
               value={initConditions.position}
               name="position"
               onChange={initConditionsInputChange}
