@@ -3,6 +3,8 @@ import "../styles/ControlsForm.css";
 import { FormInput } from "../FormInput";
 
 export const ControlsForm = ({
+  motionType,
+  setMotionType,
   dimensions,
   setDimensions,
   isAnimating,
@@ -23,11 +25,18 @@ export const ControlsForm = ({
       [name]: parseFloat(value) || 0, // Convierte a float, usa 0 si es NaN
     }));
   };
+  //se actualizan los valores de condiciones iniciales desde la entrada
   const initConditionsInputChange = (name, value) => {
     onInitConditionChange(name, value);
   };
+  //cambios en las condiciones iniciales en grados
   const initConditionsInputChangeGrades = (name, value) => {
-    onInitConditionChange(name, value*(Math.PI/180));
+    //se reciben en grados y se pasa a radianes
+    onInitConditionChange(name, value * (Math.PI / 180));
+  };
+  //cambio para seleccionar el tipo de movimiento
+  const handleMotionTypeChange = (event) => {
+    setMotionType(event.target.value);
   };
 
   return (
@@ -49,27 +58,26 @@ export const ControlsForm = ({
         </div>
 
         <div className="controls-form-container-forms-container">
+          {/* Tipo de movimiento */}
+          <label className="form-label">Tipo de movimiento</label>
+          <select
+            value={motionType}
+            onChange={handleMotionTypeChange}
+            disabled={isAnimating}
+            className="form-select"
+          >
+            <option value="simple">Movimiento armónico simple</option>
+            <option value="damped">Movimiento amortiguado</option>
+            <option value="forcedUndamped">
+              Movimiento forzado no amortiguado
+            </option>
+          </select>
+
           {/* constantes y dimensiones del sistema */}
           <label className="form-label" htmlFor="set-dimensions">
             dimensiones
           </label>
           <form action="" className="controls-form-inputs-form">
-            <FormInput
-              label="Constante de amortiguamiento (b)"
-              name="b"
-              value={dimensions.b}
-              onChange={dimensionsinputChange}
-              disabled={isAnimating}
-              min={0}
-            />
-            <FormInput
-              label="Constante de torsión (k)"
-              name="k"
-              value={dimensions.k}
-              onChange={dimensionsinputChange}
-              disabled={isAnimating}
-              min={0}
-            />
             <FormInput
               label="Longitud de la barra (l)"
               name="l"
@@ -87,6 +95,47 @@ export const ControlsForm = ({
               min={0}
             />
           </form>
+          <label className="form-label" htmlFor="set-dimensions">
+            Constantes
+          </label>
+          <form action="" className="controls-form-inputs-form">
+            {(() => {
+              switch (motionType) {
+                case "damped":
+                  return (
+                    <FormInput
+                      label="Constante de amortiguamiento (b)"
+                      name="b"
+                      value={dimensions.b}
+                      onChange={dimensionsinputChange}
+                      disabled={isAnimating}
+                      min={0}
+                    />
+                  );
+                case "forcedUndamped":
+                  return (
+                    <FormInput
+                      label="Forzado"
+                      name="force"
+                      value={dimensions.force}
+                      onChange={dimensionsinputChange}
+                      disabled={isAnimating}
+                      min={0}
+                    />
+                  );
+                default:
+                  return null; //no renderiza nada
+              }
+            })()}
+            <FormInput
+              label="Constante de torsión (k)"
+              name="k"
+              value={dimensions.k}
+              onChange={dimensionsinputChange}
+              disabled={isAnimating}
+              min={0}
+            />
+          </form>
           {/* condiciones iniciales */}
           <label className="controls-form-inputs-label">
             Condiciones iniciales
@@ -94,7 +143,7 @@ export const ControlsForm = ({
           <form className="controls-form-inputs-form">
             <FormInput
               label="Posicion inicial (Grados)"
-              value={initConditions.position *(180/Math.PI)}
+              value={initConditions.position * (180 / Math.PI)}
               name="position"
               onChange={initConditionsInputChangeGrades}
               disabled={isAnimating}
@@ -138,7 +187,7 @@ export const ControlsForm = ({
               disabled={true}
             />
             <FormInput
-              label="Amplitud variable"
+              label="Amplitud"
               name="amplitude"
               value={amplitude}
               disabled={true}

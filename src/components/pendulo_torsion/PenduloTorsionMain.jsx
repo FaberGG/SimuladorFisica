@@ -4,6 +4,8 @@ import ScenePendulo from "./ScenePendulo";
 import { ControlsForm } from "./ControlsForm";
 
 export const PenduloTorsionMain = () => {
+  //estado para el tipo de movimiento seleccionado (simple, damped, forcedUndamped)
+  const [motionType, setMotionType] = useState("damped");
   //dimensiones
   const [dimensions, setDimensions] = useState({ b: 1, k: 5, l: 1, r: 0.2 });
   //condiciones iniciales
@@ -157,8 +159,10 @@ export const PenduloTorsionMain = () => {
 
   const setAllTimeVars = (time) => {
     setTime(time);
+    if (motionType != "simple") {
+      setAmplitude(calculateAmplitude(time));
+    }
     setPosition(calculatePosition(time));
-    setAmplitude(calculateAmplitude(time));
     setAcceleration(calculateAcceleration(time));
     setVelocity(calculateVelocity(time));
     setEnergy(calculateEnergy(time));
@@ -187,6 +191,8 @@ export const PenduloTorsionMain = () => {
     <>
       <div className="form-scene-container">
         <ControlsForm
+          motionType={motionType}
+          setMotionType={setMotionType}
           dimensions={dimensions}
           setDimensions={setDimensions}
           isAnimating={isAnimating}
