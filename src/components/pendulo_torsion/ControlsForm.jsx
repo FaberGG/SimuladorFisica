@@ -64,11 +64,15 @@ export const ControlsForm = ({
             value={motionType}
             onChange={handleMotionTypeChange}
             disabled={isAnimating}
-            className="form-select"
+            className="controls-form-select"
           >
-            <option value="simple">Movimiento armónico simple</option>
-            <option value="damped">Movimiento amortiguado</option>
-            <option value="forcedUndamped">
+            <option className="controls-form-option" value="simple">
+              Movimiento armonico simple
+            </option>
+            <option className="controls-form-option" value="damped">
+              Movimiento amortiguado
+            </option>
+            <option className="controls-form-option" value="forcedUndamped">
               Movimiento forzado no amortiguado
             </option>
           </select>
@@ -94,6 +98,18 @@ export const ControlsForm = ({
               disabled={isAnimating}
               min={0}
             />
+            <FormInput
+              label="Masa de las esferas (me) [Kg]"
+              name="massSpheres"
+              value={dimensions.massSpheres}
+              disabled={true}
+            />
+            <FormInput
+              label="Masa de la barra (mb) [Kg]"
+              name="massBar"
+              value={dimensions.massBar}
+              disabled={true}
+            />
           </form>
           <label className="form-label" htmlFor="set-dimensions">
             Constantes
@@ -115,8 +131,8 @@ export const ControlsForm = ({
                 case "forcedUndamped":
                   return (
                     <FormInput
-                      label="Forzado"
-                      name="force"
+                      label="Frecuencia Fuerza Externa"
+                      name="feFrecuency"
                       value={dimensions.force}
                       onChange={dimensionsinputChange}
                       disabled={isAnimating}
@@ -187,12 +203,6 @@ export const ControlsForm = ({
               disabled={true}
             />
             <FormInput
-              label="Amplitud"
-              name="amplitude"
-              value={amplitude}
-              disabled={true}
-            />
-            <FormInput
               label="Energia Mecanica"
               name="energy"
               disabled={true}
@@ -205,33 +215,53 @@ export const ControlsForm = ({
               disabled={true}
             />
             <FormInput
-              label="Momento de inercia"
+              label="Amplitud"
+              name="amplitude"
+              value={amplitude}
+              disabled={true}
+            />
+            {(() => {
+              switch (motionType) {
+                case "damped":
+                  return (
+                    <>
+                      <FormInput
+                        label="gamma"
+                        name="gamma"
+                        value={variables.gamma}
+                        disabled={true}
+                      />
+                      <FormInput
+                        label="Frecuencia angular amortiguada (omega d)"
+                        name="omegaD"
+                        value={variables.omegaD}
+                        disabled={true}
+                      />
+                    </>
+                  );
+                case "forcedUndamped":
+                  return <></>;
+                default:
+                  return null; //no renderiza nada
+              }
+            })()}
+
+            <FormInput
+              label="Momento de inercia (I)"
               name="inertia"
               value={variables.inertia}
+              disabled={true}
+            />
+            <FormInput
+              label="Frecuencia natural (omega)"
+              name="omega"
+              value={variables.omega}
               disabled={true}
             />
             <FormInput
               label="phi"
               name="phi"
               value={variables.phi}
-              disabled={true}
-            />
-            <FormInput
-              label="Frecuencia angular (omega)"
-              name="omega"
-              value={variables.omega}
-              disabled={true}
-            />
-            <FormInput
-              label="Frecuencia angular amortiguada (omega d)"
-              name="omegaD"
-              value={variables.omegaD}
-              disabled={true}
-            />
-            <FormInput
-              label="gamma"
-              name="gamma"
-              value={variables.gamma}
               disabled={true}
             />
             <FormInput

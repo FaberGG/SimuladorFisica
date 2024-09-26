@@ -2,12 +2,22 @@ import React from "react";
 import { useState } from "react";
 import ScenePendulo from "./ScenePendulo";
 import { ControlsForm } from "./ControlsForm";
+//importo las funciones segun el tipo de movimiento
+import { getMotionCalculations } from "./motionCalculations/useMotionCalculations";
 
 export const PenduloTorsionMain = () => {
   //estado para el tipo de movimiento seleccionado (simple, damped, forcedUndamped)
-  const [motionType, setMotionType] = useState("damped");
+  const [motionType, setMotionType] = useState("simple");
   //dimensiones
-  const [dimensions, setDimensions] = useState({ b: 1, k: 5, l: 1, r: 0.2 });
+  const [dimensions, setDimensions] = useState({
+    b: 1,
+    k: 5,
+    l: 1,
+    r: 0.2,
+    feFrecuency: 0,
+    massSpheres: 1,
+    massBar: 3,
+  });
   //condiciones iniciales
   const [initConditions, setInitConditions] = useState({
     position: 0,
@@ -21,6 +31,7 @@ export const PenduloTorsionMain = () => {
     phi: 0,
     omega: 0, //frecuencia nat
     omegaD: 0, //frecuencia amortiguada
+    omegaF: 0, //frecuencia angular forzada
     gamma: 0, //amortiguamiento
     period: 0,
     frecuency: 0,
@@ -42,86 +53,19 @@ export const PenduloTorsionMain = () => {
   //se actualiza al querer reiniciar el programa de cero
   const [reset, setReset] = useState(false);
 
-  //SECCION CONDICIONES INICIALES
-  //SE CALCULAN TODAS LAS VARIABLES QUE DEPENDEN DE LAS CONDICIONES INICIALES
-  //son llamadas cada vez que se actualizan las condiciones iniciales
-  const calculateInitAmplitude = () => {
-    // Implementar amplitud inicial
-    return 0;
-  };
+  //TODOS LOS CALCULOS LOS IMPORTO EN EL SIGUIENTE OBJETO, SEGUN EL TIPO DE MOVIMIENTO
+  const motionCalculations = getMotionCalculations(motionType);
 
-  const calculateInertia = () => {
-    // Implementar inercia
-    return 0;
+  //CALCULO PARA LA INERCIA (SIEMPRE SERA LA MISMA)
+  // Función para calcular el momento de inercia del sistema
+  const calculateInertia = (massSpheres, r, massBar, l) => {
+    // Fórmula de inercia
+    console.log(massSpheres, massBar, r, l);
+    return (
+      2 * ((2 / 5) * massSpheres * Math.pow(r, 2)) +
+      (1 / 12) * massBar * Math.pow(l, 2)
+    );
   };
-
-  const calculateOmega = () => {
-    // Implementar frecuencia angular omega
-    return 0;
-  };
-  const calculateOmegaD = () => {
-    // Implementar frecuencia angular amortiguada omegaD
-    return 0;
-  };
-
-  const calculateGamma = () => {
-    // Implementar factor de amortiguamiento gamma
-    return 0;
-  };
-
-  const calculatePeriod = () => {
-    // Implementar periodo del péndulo
-    return 0;
-  };
-
-  const calculateFrequency = () => {
-    // Implementar frecuencia
-    return 0;
-  };
-
-  //SECCION FUNCIONES DE TIEMPO
-  //no llamar funciones de condiciones iniciales dentro de estas funciones (se actualizan cada fotograma)
-  //en lugar de esto utilizar las variables de estado useState
-
-  //calcular la POSICION theta
-  const calculatePosition = (time) => {
-    //se debe calcular el angulo con las variables que se calcularon anteriormente
-    //los angulos siempre en radianes
-    const newAngle = (Math.PI / 2) * Math.sin(time);
-
-    return newAngle;
-  };
-
-  //funcion para calcular VELOCIDAD
-  const calculateVelocity = (time) => {
-    // Implementar
-    const newVelocity = 0;
-    return newVelocity;
-  };
-
-  //funcion para calcular acceleration (es necesaria?)
-  const calculateAcceleration = (time) => {
-    // Implementar
-    const newAcceleration = 0;
-    return newAcceleration;
-  };
-
-  //funcion para calcular VELOCIDAD
-  const calculateAmplitude = (time) => {
-    //En esta no se setea ningun estado
-    //no se llama a la funcion calcular gamma, se usa la variable
-    // Implementar
-    const newAmplitude = 0;
-    return newAmplitude;
-  };
-
-  //funcion para la ENERGIA
-  const calculateEnergy = (time) => {
-    // Implementar
-    const newEnergy = 0;
-    return newEnergy;
-  };
-  //FIN DE LOS CALCULOS
 
   //LLAMADO A LOS CALCULOS CON EL VALOR DE LAS CONDICIONES INICIALES
   const updateInitConditions = (name, value) => {
@@ -131,25 +75,7 @@ export const PenduloTorsionMain = () => {
     }));
 
     // Calcula las variables iniciales con las nuevas condiciones
-    const newAmplitude = calculateInitAmplitude();
-    const newInertia = calculateInertia();
-    const newOmega = calculateOmega();
-    const newOmegaD = calculateOmegaD();
-    const newGamma = calculateGamma();
-    const newPeriod = calculatePeriod();
-    const newFrequency = calculateFrequency();
-
-    // Actualiza el estado con las nuevas variables calculadas
-    setvariables({
-      InitAmplitude: newAmplitude,
-      inertia: newInertia,
-      phi: initConditions.position, // Depende de la posición inicial
-      omega: newOmega,
-      omegaD: newOmegaD,
-      gamma: newGamma,
-      period: newPeriod,
-      frecuency: newFrequency,
-    });
+    setAllNoTimeVars();
 
     name == "position" ? setPosition(parseFloat(value) || 0) : 0;
     name == "velocity" ? setVelocity(parseFloat(value) || 0) : 0;
@@ -160,16 +86,56 @@ export const PenduloTorsionMain = () => {
   const setAllTimeVars = (time) => {
     setTime(time);
     if (motionType != "simple") {
-      setAmplitude(calculateAmplitude(time));
+      setAmplitude(motionCalculations.calculateAmplitude(time));
     }
-    setPosition(calculatePosition(time));
-    setAcceleration(calculateAcceleration(time));
-    setVelocity(calculateVelocity(time));
-    setEnergy(calculateEnergy(time));
+    setPosition(motionCalculations.calculatePosition(time));
+    setAcceleration(motionCalculations.calculateAcceleration(time));
+    setVelocity(motionCalculations.calculateVelocity(time));
+    setEnergy(motionCalculations.calculateEnergy(time));
   };
 
+  //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
+  const setAllNoTimeVars = () => {
+    const newAmplitude = motionCalculations.calculateInitAmplitude();
+    const newInertia = calculateInertia(
+      dimensions.massSpheres,
+      dimensions.r,
+      dimensions.massBar,
+      dimensions.l
+    );
+
+    const newOmega = motionCalculations.calculateOmega();
+    const newPeriod = motionCalculations.calculatePeriod();
+    const newFrequency = motionCalculations.calculateFrequency();
+    let newPhi = 0;
+    let newOmegaD = newOmega;
+    let newGamma = 0;
+    let newOmegaF = 0;
+    if (motionType == "damped") {
+      newOmegaD = motionCalculations.calculateOmegaD();
+      newGamma = motionCalculations.calculateGamma();
+      newPhi = motionCalculations.calculatePhi();
+    } else if (motionType == "forcedUndamped") {
+      newOmegaF = motionCalculations.calculateOmegaF();
+    }
+
+    // Actualiza el estado con las nuevas variables calculadas
+    setvariables({
+      InitAmplitude: newAmplitude,
+      inertia: newInertia,
+      phi: newPhi,
+      omega: newOmega,
+      omegaD: newOmegaD,
+      omegaF: newOmegaF,
+      gamma: newGamma,
+      period: newPeriod,
+      frecuency: newFrequency,
+    });
+  };
   //CONTROLAR ANIMACION
   const toggleAnimation = () => {
+    //al iniciar animacion, calcular todas las variables que no dependen del tiempo
+    setAllNoTimeVars();
     setIsAnimating((prev) => !prev); // Alternar entre verdadero y falso
   };
 
