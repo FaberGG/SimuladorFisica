@@ -18,6 +18,7 @@ export const PenduloTorsionMain = () => {
     massSpheres: 1,
     massBar: 3,
   });
+
   //condiciones iniciales
   const [initConditions, setInitConditions] = useState({
     position: 0,
@@ -48,23 +49,24 @@ export const PenduloTorsionMain = () => {
   const [amplitude, setAmplitude] = useState(variables.InitAmplitude);
   //Energia tambien varia con el tiempo
   const [energy, setEnergy] = useState(0);
+
+  //ESTADOS DEL PROGRAMA
   //es falso cuando el programa esta pausado, true cuando se estan ejecutando los calculos de posicion
   const [isAnimating, setIsAnimating] = useState(false);
   //se actualiza al querer reiniciar el programa de cero
   const [reset, setReset] = useState(false);
+  //se actualiza para mostrar guias (el transportador)
+  const [showGuides, setShowGuides] = useState(false);
 
+  //CALCULOS
   //TODOS LOS CALCULOS LOS IMPORTO EN EL SIGUIENTE OBJETO, SEGUN EL TIPO DE MOVIMIENTO
   const motionCalculations = getMotionCalculations(motionType);
 
   //CALCULO PARA LA INERCIA (SIEMPRE SERA LA MISMA)
   // Función para calcular el momento de inercia del sistema
-  const calculateInertia = (massSpheres, r, massBar, l) => {
-    // Fórmula de inercia
-    console.log(massSpheres, massBar, r, l);
-    return (
-      2 * ((2 / 5) * massSpheres * Math.pow(r, 2)) +
-      (1 / 12) * massBar * Math.pow(l, 2)
-    );
+  const calculateInertia = (r, l) => {
+    //SE ASUME QUE masaEsfera=1kg y masaBarra = 3kg
+    return (4 / 5) * Math.pow(r, 2) + (3 / 4) * Math.pow(l, 2);
   };
 
   //LLAMADO A LOS CALCULOS CON EL VALOR DE LAS CONDICIONES INICIALES
@@ -97,12 +99,7 @@ export const PenduloTorsionMain = () => {
   //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
   const setAllNoTimeVars = () => {
     const newAmplitude = motionCalculations.calculateInitAmplitude();
-    const newInertia = calculateInertia(
-      dimensions.massSpheres,
-      dimensions.r,
-      dimensions.massBar,
-      dimensions.l
-    );
+    const newInertia = calculateInertia(dimensions.r, dimensions.l);
 
     const newOmega = motionCalculations.calculateOmega();
     const newPeriod = motionCalculations.calculatePeriod();
@@ -135,8 +132,17 @@ export const PenduloTorsionMain = () => {
   //CONTROLAR ANIMACION
   const toggleAnimation = () => {
     //al iniciar animacion, calcular todas las variables que no dependen del tiempo
-    setAllNoTimeVars();
-    setIsAnimating((prev) => !prev); // Alternar entre verdadero y falso
+    if (dimensions.l == 0 || dimensions.r == 0 || dimensions.k == 0) {
+      alert("ERORR: Las dimensiones o k no pueden ser 0 o nulas");
+    } else {
+      setAllNoTimeVars();
+      setIsAnimating((prev) => !prev); // Alternar entre verdadero y falso
+    }
+  };
+
+  //MOSSTRAR U OCULTAR GUIAS (TRANSPORTADOR)
+  const toggleGuides = () => {
+    setShowGuides((prev) => !prev);
   };
 
   //REINICIAR EL PROGRAMA
@@ -144,13 +150,34 @@ export const PenduloTorsionMain = () => {
     setIsAnimating(false);
     setReset(true);
     setTimeout(() => setReset(false), 0);
-    setDimensions({ b: 1, k: 5, l: 1, r: 0.2 });
+
+    setDimensions({
+      b: 1,
+      k: 5,
+      l: 1,
+      r: 0.2,
+      feFrecuency: 0,
+      massSpheres: 1,
+      massBar: 3,
+    });
     setInitConditions({ position: 0, velocity: 0 });
-    setPosition(initConditions.position);
+    setvariables({
+      InitAmplitude: 0,
+      inertia: 0,
+      phi: 0,
+      omega: 0,
+      omegaD: 0,
+      omegaF: 0,
+      gamma: 0,
+      period: 0,
+      frecuency: 0,
+    });
     setTime(0);
-    setVelocity(initConditions.velocity);
+    setPosition(0);
+    setVelocity(0);
     setAcceleration(0);
     setAmplitude(variables.InitAmplitude);
+    setEnergy(0);
   };
 
   return (
@@ -172,6 +199,7 @@ export const PenduloTorsionMain = () => {
           velocity={velocity}
           amplitude={amplitude}
           energy={energy}
+          toggleGuides={toggleGuides}
         />
         <ScenePendulo
           dimensions={dimensions}
@@ -179,6 +207,7 @@ export const PenduloTorsionMain = () => {
           position={position}
           isAnimating={isAnimating}
           reset={reset}
+          showGuides={showGuides}
         />
       </div>
     </>

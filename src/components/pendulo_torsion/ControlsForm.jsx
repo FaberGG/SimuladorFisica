@@ -18,10 +18,12 @@ export const ControlsForm = ({
   velocity,
   amplitude,
   energy,
+  toggleGuides,
 }) => {
   const dimensionsinputChange = (name, value) => {
     setDimensions((prev) => ({
       ...prev, // Mantiene los otros valores
+
       [name]: parseFloat(value) || 0, // Convierte a float, usa 0 si es NaN
     }));
   };
@@ -286,7 +288,11 @@ export const ControlsForm = ({
           >
             REINICIAR
           </button>
-          <button type="button" className="controls-form-guide-button">
+          <button
+            type="button"
+            className="controls-form-guide-button"
+            onClick={toggleGuides}
+          >
             MOSTRAR GUIAS
           </button>
         </div>

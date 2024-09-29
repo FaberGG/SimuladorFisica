@@ -34,14 +34,6 @@ export default function BarWithSpheres({
     }
   }, [isAnimating]);
 
-  // Handle reset
-  useEffect(() => {
-    if (reset) {
-      setElapsedTime(0);
-      clockRef.current = new THREE.Clock(false); // Reset the clock
-      groupRef.current.rotation.y = 0; // Reset rotation
-    }
-  }, [reset]);
   useFrame(() => {
     if (isAnimating) {
       const currentElapsedTime = clockRef.current.getElapsedTime();

@@ -1,3 +1,5 @@
+import { sin } from "three/webgpu";
+
 export function calculateInitAmplitude() {
   // Calcula la amplitud inicial (amplitud máxima)
   // Parámetros: definir los parametros
@@ -26,7 +28,7 @@ export function calculateFrequency() {
 
 export function calculatePosition(time) {
   // Parámetros: definir los parametros
-  return 0;
+  return Math.PI * Math.sin(time);
 }
 
 export function calculateVelocity(time) {
