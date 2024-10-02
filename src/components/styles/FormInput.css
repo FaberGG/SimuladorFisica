@@ -1,0 +1,31 @@
+.form-input-wrapper {
+  display: flex;
+  align-items: center; /* Alinea el label y el input en el centro verticalmente */
+  background-color: #1c1c1e; /* Fondo oscuro */
+  padding: 12px;
+  border-radius: 10px; /* Bordes redondeados */
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.form-input-label {
+  color: #ffffff; /* Texto blanco */
+  font-size: 14px;
+  margin-right: 16px; /* Espacio entre el label y el input */
+  min-width: 100px; /* Ancho mínimo para el label */
+}
+
+.form-input-input {
+  flex: 1; /* El input ocupará el resto del espacio */
+  background-color: #2c2c2e; /* Fondo oscuro para el input */
+  color: #ffffff; /* Texto blanco */
+  border: none;
+  padding: 5px;
+  border-radius: 6px; /* Bordes redondeados */
+  font-size: 14px;
+}
+
+.form-input-input:focus {
+  outline: none;
+  border: 1px solid #6e6e73; /* Borde en el foco */
+}

@@ -30,7 +30,7 @@ export const PenduloTorsionMain = () => {
     InitAmplitude: 0,
     inertia: 0,
     phi: 0,
-    omega: 0, //frecuencia nat
+    omega: 0,
     omegaD: 0, //frecuencia amortiguada
     omegaF: 0, //frecuencia angular forzada
     gamma: 0, //amortiguamiento
@@ -76,9 +76,6 @@ export const PenduloTorsionMain = () => {
       [name]: parseFloat(value) || 0, // Convierte a float y usa 0 si es NaN
     }));
 
-    // Calcula las variables iniciales con las nuevas condiciones
-    setAllNoTimeVars();
-
     name == "position" ? setPosition(parseFloat(value) || 0) : 0;
     name == "velocity" ? setVelocity(parseFloat(value) || 0) : 0;
   };
@@ -87,34 +84,116 @@ export const PenduloTorsionMain = () => {
 
   const setAllTimeVars = (time) => {
     setTime(time);
-    if (motionType != "simple") {
-      setAmplitude(motionCalculations.calculateAmplitude(time));
+    switch (motionType) {
+      case "simple":
+        setPosition(
+          motionCalculations.calculatePosition(
+            time,
+            variables.InitAmplitude,
+            variables.phi,
+            variables.omega
+          )
+        );
+        setAcceleration(
+          motionCalculations.calculateAcceleration(
+            time,
+            variables.InitAmplitude,
+            variables.phi,
+            variables.omega
+          )
+        );
+        setVelocity(
+          motionCalculations.calculateVelocity(
+            time,
+            variables.InitAmplitude,
+            variables.phi,
+            variables.omega
+          )
+        );
+        setEnergy(
+          motionCalculations.calculateEnergy(
+            velocity,
+            position,
+            variables.inertia,
+            dimensions.k
+          )
+        );
+        setAmplitude(variables.InitAmplitude);
+        break;
+      case "damped":
+        break;
+      case "forcedUndamped": //caso forzado no amortiguado
+        break;
+      case "forcedDamped": //caso forzado no amortiguado
+        break;
+      default: // Tipo de mov no implementado
+        alert(
+          "ERROR: Tipo de movimiento " +
+            motionType +
+            " no implementado. asegurese de seleccionar uno"
+        );
+        break;
     }
-    setPosition(motionCalculations.calculatePosition(time));
-    setAcceleration(motionCalculations.calculateAcceleration(time));
-    setVelocity(motionCalculations.calculateVelocity(time));
-    setEnergy(motionCalculations.calculateEnergy(time));
   };
 
   //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
   const setAllNoTimeVars = () => {
-    const newAmplitude = motionCalculations.calculateInitAmplitude();
+    //calcula la inercia con los valores de radio esferas y longitud barra
     const newInertia = calculateInertia(dimensions.r, dimensions.l);
 
-    const newOmega = motionCalculations.calculateOmega();
-    const newPeriod = motionCalculations.calculatePeriod();
-    const newFrequency = motionCalculations.calculateFrequency();
-    let newPhi = 0;
-    let newOmegaD = newOmega;
+    //CALCULA LA FRECUENCIA NATURAL DE MOV
+    const newOmega = motionCalculations.calculateOmega(
+      newInertia,
+      dimensions.k
+    );
+
+    let omegaTemp = 0; // toma el valor de w, wd u wf segun el tipo de movimiento
     let newGamma = 0;
-    let newOmegaF = 0;
-    if (motionType == "damped") {
-      newOmegaD = motionCalculations.calculateOmegaD();
-      newGamma = motionCalculations.calculateGamma();
-      newPhi = motionCalculations.calculatePhi();
-    } else if (motionType == "forcedUndamped") {
-      newOmegaF = motionCalculations.calculateOmegaF();
+    let newOmegaD = newOmega;
+    let newOmegaF = newOmega;
+
+    switch (motionType) {
+      case "simple": //caso simple omegaTemp es la misma frecuancia natural
+        omegaTemp = newOmega;
+        break;
+      case "damped": //caso amortiguado omegaTemp es omegaD
+        newGamma = motionCalculations.calculateGamma(
+          dimensions.b,
+          variables.inertia
+        );
+        newOmegaD = motionCalculations.calculateOmegaD(newOmega, newGamma);
+        omegaTemp = newOmegaD;
+        break;
+      case "forcedUndamped": //caso forzado no amortiguado
+        break;
+      case "forcedDamped": //caso forzado no amortiguado
+        break;
+      default: // Tipo de mov no implementado
+        alert(
+          "ERROR: Tipo de movimiento " +
+            motionType +
+            " no implementado. asegurese de seleccionar uno"
+        );
+        break;
     }
+
+    const newPhi = motionCalculations.calculatePhi(
+      initConditions.position,
+      initConditions.velocity,
+      omegaTemp
+    );
+    //calcula la amplitud inicial segun el tipo de mov
+    let newAmplitude = motionCalculations.calculateInitAmplitude(
+      newPhi,
+      initConditions.position,
+      initConditions.velocity,
+      omegaTemp
+    );
+    //calcula el periodo segun el tipo de mov
+    const newPeriod = motionCalculations.calculatePeriod(omegaTemp);
+    //calcula la frecuencia a partir del periodo
+    const newFrequency = motionCalculations.calculateFrequency(newPeriod);
+    //calcula el valor de phi segun el tipo de movimiento
 
     // Actualiza el estado con las nuevas variables calculadas
     setvariables({
@@ -134,6 +213,16 @@ export const PenduloTorsionMain = () => {
     //al iniciar animacion, calcular todas las variables que no dependen del tiempo
     if (dimensions.l == 0 || dimensions.r == 0 || dimensions.k == 0) {
       alert("ERORR: Las dimensiones o k no pueden ser 0 o nulas");
+    } else if (
+      Math.abs(initConditions.position) > 0.2618 ||
+      Math.abs(initConditions.velocity) > 0.2618
+    ) {
+      alert(
+        "ERROR: La posicion y velocidad inicial deben estar en el rango de 15 grados"
+      );
+    } //si ambas condiciones iniciales son cero se solicita que se llenen
+    else if (initConditions.position == 0 && initConditions.velocity == 0) {
+      alert(" ERROR: La posicion y velocidad inicial deben ser ingresadas ");
     } else {
       setAllNoTimeVars();
       setIsAnimating((prev) => !prev); // Alternar entre verdadero y falso

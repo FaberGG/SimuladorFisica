@@ -18,7 +18,8 @@
   border-radius: 1% 1% 1% 1%;
 
   /* temporal */
-  background-color: rgb(124, 124, 149);
+  background-color: #1c1c1e;
+  color: white;
 }
 
 .controls-form-header {
@@ -33,11 +34,72 @@
   font-size: large;
   background-color: rgb(34, 41, 46);
 }
+.controls-form-container-forms-container {
+  max-height: 85vh; /* Limita el alto máximo del contenedor al 80% de la ventana */
+  overflow-y: auto; /* Habilita el scroll vertical si el contenido es más grande */
+  padding: 20px; /* Espaciado interno opcional */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+}
 
+/* Cambia el ancho del scroll */
+.controls-form-container-forms-container::-webkit-scrollbar {
+  width: 12px; /* Ancho de la barra de scroll */
+}
+
+/* Cambia el color de fondo del scroll */
+.controls-form-container-forms-container::-webkit-scrollbar-track {
+  background: #1c1c1e; /* Fondo de la pista del scroll */
+}
+
+/* Cambia el color y el estilo del thumb (la parte que se mueve) */
+.controls-form-container-forms-container::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color del thumb */
+  border-radius: 10px; /* Bordes redondeados */
+  border: 3px solid #2c2c2e; /* Borde alrededor del thumb */
+}
+
+/* Cambia el color cuando el usuario interactúa con el thumb */
+.controls-form-container-forms-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555; /* Color del thumb al pasar el mouse */
+}
 .controls-form-btn {
   width: 35%;
 }
 .controls-form-title {
   width: 65%;
   font: bold;
+}
+
+.controls-form-select {
+  appearance: none; /* Oculta el estilo predeterminado del navegador */
+  background-color: #1c1c1e; /* Fondo oscuro como en la imagen */
+  border: 1px solid #3a3a3c; /* Borde similar */
+  border-radius: 8px; /* Bordes redondeados */
+  color: #fff; /* Texto en blanco */
+  padding: 8px 12px; /* Espaciado interno */
+  font-size: 16px; /* Tamaño de la fuente */
+  width: 100%; /* Ancho completo */
+  outline: none; /* Elimina el borde al hacer focus */
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.controls-form-select:hover {
+  border-color: #636366; /* Color de borde al pasar el cursor */
+}
+
+.controls-form-select:focus {
+  border-color: #007aff; /* Borde azul al hacer focus */
+}
+
+.controls-form-option {
+  background-color: #1c1c1e; /* Fondo oscuro */
+  color: #fff; /* Texto blanco */
+}
+
+.form-label {
+  color: #fff; /* Etiqueta de texto en blanco */
+  font-size: 14px;
+  margin-bottom: 4px;
+  display: block;
 }

@@ -10,6 +10,7 @@ export default function ScenePendulo({
   position,
   isAnimating,
   reset,
+  showGuides,
 }) {
   // estilo del canvas
   let canvasStyle = { display: "flex", height: "100vh" };
@@ -18,7 +19,7 @@ export default function ScenePendulo({
   const ceilingHeight = 4 * dimensions.r * dimensions.l;
   const wireHeight = ceilingHeight / 2;
   const wireRadius =
-    (0.1 * dimensions.r) / 4 + (dimensions.l * (0.03 * dimensions.r)) / 2;
+    (0.1 * dimensions.r + 0.1 * dimensions.l * (0.003 * dimensions.r)) / 4;
 
   return (
     <Canvas style={canvasStyle}>
@@ -48,7 +49,8 @@ export default function ScenePendulo({
 
       <axesHelper args={[dimensions.l]} />
       {/* TRANSPORTADOR PARA TENER REFERENCIA DEL ANGULO */}
-      <Protractor length={dimensions.l / 2} />
+
+      {showGuides ? <Protractor length={dimensions.l / 2} /> : ""}
       <BarWithSpheres
         length={dimensions.l}
         radius={dimensions.r}

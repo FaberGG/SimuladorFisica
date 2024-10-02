@@ -1,6 +1,7 @@
 import * as SimpleHarmonic from "./simpleHarmonicMotion";
 import * as Damped from "./dampedMotion";
-import * as Forced from "./forcedMotion";
+import * as ForcedUndamped from "./forcedUndampedMotion";
+import * as ForcedDamped from "./forcedDampedMotion";
 
 export function getMotionCalculations(motionType) {
   switch (motionType) {
@@ -9,7 +10,9 @@ export function getMotionCalculations(motionType) {
     case "damped":
       return Damped;
     case "forcedUndamped":
-      return Forced;
+      return ForcedUndamped;
+    case "forcedDamped":
+      return ForcedDamped;
     default:
       throw new Error(`Tipo de movimiento no soportado: ${motionType}`);
   }

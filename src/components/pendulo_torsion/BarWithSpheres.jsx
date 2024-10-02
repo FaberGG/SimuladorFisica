@@ -50,8 +50,8 @@ export default function BarWithSpheres({
           <boxGeometry
             args={[
               length,
-              (0.1 * radius) / 2 + length * (0.03 * radius),
-              (0.1 * radius) / 2 + length * (0.03 * radius),
+              (0.1 * radius + 0.3 * length * (0.003 * radius)) / 2,
+              (0.1 * radius + 0.3 * length * (0.003 * radius)) / 2,
             ]}
           />
           <meshStandardMaterial color="white" metalness={0.6} roughness={0.1} />

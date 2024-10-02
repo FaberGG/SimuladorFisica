@@ -7,23 +7,21 @@ export const FormInput = ({ label, name, disabled, value, onChange, min }) => {
     return Math.round(numero * factor) / factor;
   }
   return (
-    <div>
-      <div className="form-input-label">
-        <label htmlFor={name}>{label}</label>
-      </div>
-      <div className="form-input-container">
-        <input
-          value={value == 0 ? "" : roundDecimal(value, 4)}
-          placeholder={value == 0 ? "0" : ""}
-          onChange={(e) => onChange(name, e.target.value)}
-          type="number"
-          id={name}
-          name={name}
-          className="form-input-input"
-          disabled={disabled}
-          min={min}
-        />
-      </div>
+    <div className="form-input-wrapper">
+      <label htmlFor={name} className="form-input-label">
+        {label}
+      </label>
+      <input
+        value={value == 0 ? "" : roundDecimal(value, 4)}
+        placeholder={value == 0 ? "0" : ""}
+        onChange={(e) => onChange(name, e.target.value)}
+        type="number"
+        id={name}
+        name={name}
+        className="form-input-input"
+        disabled={disabled}
+        min={min}
+      />
     </div>
   );
 };
