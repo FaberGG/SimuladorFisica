@@ -16,6 +16,7 @@ export const ControlsForm = ({
   time,
   position,
   velocity,
+  acceleration,
   amplitude,
   energy,
   toggleGuides,
@@ -136,9 +137,17 @@ export const ControlsForm = ({
                         min={0}
                       />
                       <FormInput
-                        label="Frecuencia Fuerza Externa (hz)"
-                        name="feFrecuency"
-                        value={dimensions.force}
+                        label="Amplitud Fuerza Externa (fo)"
+                        name="Fo"
+                        value={dimensions.Fo}
+                        onChange={dimensionsinputChange}
+                        disabled={isAnimating}
+                        min={0}
+                      />
+                      <FormInput
+                        label="Frecuencia Fuerza Externa (wf)"
+                        name="omegaF"
+                        value={dimensions.omegaF}
                         onChange={dimensionsinputChange}
                         disabled={isAnimating}
                         min={0}
@@ -158,14 +167,24 @@ export const ControlsForm = ({
                   );
                 case "forcedUndamped":
                   return (
-                    <FormInput
-                      label="Frecuencia Fuerza Externa (hz)"
-                      name="feFrecuency"
-                      value={dimensions.force}
-                      onChange={dimensionsinputChange}
-                      disabled={isAnimating}
-                      min={0}
-                    />
+                    <>
+                      <FormInput
+                        label="Amplitud Fuerza Externa (fo)"
+                        name="Fo"
+                        value={dimensions.Fo}
+                        onChange={dimensionsinputChange}
+                        disabled={isAnimating}
+                        min={0}
+                      />
+                      <FormInput
+                        label="Frecuencia Fuerza Externa (wf)"
+                        name="omegaF"
+                        value={dimensions.omegaF}
+                        onChange={dimensionsinputChange}
+                        disabled={isAnimating}
+                        min={0}
+                      />
+                    </>
                   );
 
                 default:
@@ -233,11 +252,12 @@ export const ControlsForm = ({
               value={position}
             />
             <FormInput
-              label="Velocidad (Rad)"
+              label="Velocidad (Rad/s)"
               name="velocity"
               value={velocity}
               disabled={true}
             />
+
             <FormInput
               label="Energia Mecanica (J)"
               name="energy"
