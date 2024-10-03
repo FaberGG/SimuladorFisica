@@ -19,7 +19,8 @@ export const ControlsForm = ({
   acceleration,
   amplitude,
   energy,
-  toggleGuides,
+  setShowGuides,
+  showGuides,
 }) => {
   const dimensionsinputChange = (name, value) => {
     setDimensions((prev) => ({
@@ -41,19 +42,24 @@ export const ControlsForm = ({
   const handleMotionTypeChange = (event) => {
     setMotionType(event.target.value);
   };
-
+  //MOSSTRAR U OCULTAR GUIAS (TRANSPORTADOR)
+  const toggleGuides = () => {
+    setShowGuides((prev) => !prev);
+  };
   return (
     <div className="controls-form-container">
       <div className="controls-form-card">
         <div className="controls-form-header">
           <label className="controls-form-title">Pendulo de torsion</label>
+
+          {/* BOTON PARA EJECUTAR LOS CALCULOS */}
           <button
             onClick={toggleAnimation}
             type="button"
             className={
               isAnimating
-                ? "controls-form-btn on-play"
-                : "controls-form-btn on-pause"
+                ? "controls-form-btn btn-on-play"
+                : "controls-form-btn btn-on-pause"
             }
           >
             {isAnimating ? "Pausar" : "Iniciar"}
@@ -62,29 +68,26 @@ export const ControlsForm = ({
 
         <div className="controls-form-container-forms-container">
           {/* Tipo de movimiento */}
-          <div className="form-input-wrapper">
-            <label className="form-label">Tipo de movimiento</label>
-            <select
-              value={motionType}
-              onChange={handleMotionTypeChange}
-              disabled={isAnimating}
-              className="controls-form-select"
-            >
-              <option className="controls-form-option" value="simple">
-                Movimiento armonico simple
-              </option>
-              <option className="controls-form-option" value="damped">
-                Movimiento amortiguado
-              </option>
-              <option className="controls-form-option" value="forcedUndamped">
-                Movimiento forzado no amortiguado
-              </option>
-              <option className="controls-form-option" value="forcedDamped">
-                Movimiento forzado amortiguado
-              </option>
-            </select>
-          </div>
-
+          <label className="form-label">Tipo de movimiento</label>
+          <select
+            value={motionType}
+            onChange={handleMotionTypeChange}
+            disabled={isAnimating}
+            className="controls-form-select"
+          >
+            <option className="controls-form-option" value="simple">
+              Movimiento armonico simple
+            </option>
+            <option className="controls-form-option" value="damped">
+              Movimiento amortiguado
+            </option>
+            <option className="controls-form-option" value="forcedUndamped">
+              Movimiento forzado no amortiguado
+            </option>
+            <option className="controls-form-option" value="forcedDamped">
+              Movimiento forzado amortiguado
+            </option>
+          </select>
           {/* constantes y dimensiones del sistema */}
           <label className="form-label" htmlFor="set-dimensions">
             dimensiones
@@ -333,16 +336,16 @@ export const ControlsForm = ({
           <button
             onClick={resetSystem}
             type="button"
-            className="controls-form-reset-button"
+            className="controls-form-reset-button controls-form-btn"
           >
             REINICIAR
           </button>
           <button
             type="button"
-            className="controls-form-guide-button"
+            className="controls-form-guide-button controls-form-btn"
             onClick={toggleGuides}
           >
-            MOSTRAR GUIAS
+            {showGuides ? "Ocultar Guias" : "Mostrar Guias"}
           </button>
         </div>
       </div>

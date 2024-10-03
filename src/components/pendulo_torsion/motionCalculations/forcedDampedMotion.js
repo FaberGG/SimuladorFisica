@@ -43,11 +43,6 @@ export const calculateVelocity = (time, initAmplitude, phi) => {
   return 0;
 };
 
-// Función para calcular la aceleración angular en función del tiempo
-export const calculateAcceleration = (time) => {
-  return 0;
-};
-
 // Función para calcular la amplitud en función del tiempo
 export const calculateAmplitude = (time, initAmplitude) => {
   return 0;

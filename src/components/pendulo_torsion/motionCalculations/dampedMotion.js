@@ -40,9 +40,7 @@ export const calculateInitAmplitude = (
   initVelocity,
   omegaD
 ) => {
-  return Math.sqrt(
-    Math.pow(initPosition, 2) + Math.pow(initVelocity / omegaD, 2)
-  );
+  return initPosition / Math.cos(phi);
 };
 
 // Función para calcular la frecuencia angular natural (omega)

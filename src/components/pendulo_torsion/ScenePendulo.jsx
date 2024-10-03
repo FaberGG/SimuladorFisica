@@ -46,8 +46,8 @@ export default function ScenePendulo({
         <cylinderGeometry args={[wireRadius, wireRadius, ceilingHeight, 8]} />
         <meshStandardMaterial color="white" metalness={0.7} roughness={0.3} />
       </mesh>
+      {showGuides ? <axesHelper args={[dimensions.l]} /> : <></>}
 
-      <axesHelper args={[dimensions.l]} />
       {/* TRANSPORTADOR PARA TENER REFERENCIA DEL ANGULO */}
 
       {showGuides ? <Protractor length={dimensions.l / 2} /> : ""}

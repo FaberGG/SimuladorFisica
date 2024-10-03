@@ -97,7 +97,7 @@
 }
 
 .card-copy {
-  font-family: var(--font-serif);
+  font-family: inherit;
   font-size: 1.125rem;
   font-style: italic;
   line-height: 1.35;

@@ -6,6 +6,11 @@ export const FormInput = ({ label, name, disabled, value, onChange, min }) => {
     const factor = 10 ** decimales;
     return Math.round(numero * factor) / factor;
   }
+  // Función para desactivar el scroll sobre el input
+  const handleWheel = (e) => {
+    e.target.blur(); // Desenfoca el input cuando se usa la rueda del mouse
+  };
+
   return (
     <div className="form-input-wrapper">
       <label htmlFor={name} className="form-input-label">
@@ -21,6 +26,7 @@ export const FormInput = ({ label, name, disabled, value, onChange, min }) => {
         className="form-input-input"
         disabled={disabled}
         min={min}
+        onWheel={handleWheel}
       />
     </div>
   );

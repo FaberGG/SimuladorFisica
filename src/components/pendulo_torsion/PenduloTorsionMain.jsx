@@ -22,7 +22,7 @@ export const PenduloTorsionMain = () => {
 
   //condiciones iniciales
   const [initConditions, setInitConditions] = useState({
-    position: 0,
+    position: 0.22,
     velocity: 0,
   });
 
@@ -43,8 +43,6 @@ export const PenduloTorsionMain = () => {
   const [position, setPosition] = useState(initConditions.position);
   //velocidad, se calcula en todo momento (solo para mostrar su valor no se usa para mover el sistema)
   const [velocity, setVelocity] = useState(initConditions.velocity);
-  //aceleracion, se actualiza en todo momento solo para mostrar solamente
-  const [acceleration, setAcceleration] = useState(0);
   //amplitud (con amortiguamiento varia en el tiempo)
   const [amplitude, setAmplitude] = useState(variables.InitAmplitude);
   //Energia tambien varia con el tiempo
@@ -102,14 +100,6 @@ export const PenduloTorsionMain = () => {
             variables.omega
           )
         );
-        setAcceleration(
-          motionCalculations.calculateAcceleration(
-            time,
-            variables.InitAmplitude,
-            variables.phi,
-            variables.omega
-          )
-        );
         setEnergy(
           motionCalculations.calculateEnergy(
             velocity,
@@ -133,14 +123,6 @@ export const PenduloTorsionMain = () => {
         );
         // setVelocity(
         //   motionCalculations.calculateVelocity(
-        //     time,
-        //     variables.InitAmplitude,
-        //     variables.phi,
-        //     variables.omega
-        //   )
-        // );
-        // setAcceleration(
-        //   motionCalculations.calculateAcceleration(
         //     time,
         //     variables.InitAmplitude,
         //     variables.phi,
@@ -285,10 +267,7 @@ export const PenduloTorsionMain = () => {
     //al iniciar animacion, calcular todas las variables que no dependen del tiempo
     if (dimensions.l == 0 || dimensions.r == 0 || dimensions.k == 0) {
       alert("ERORR: Las dimensiones o k no pueden ser 0 o nulas");
-    } else if (
-      Math.abs(initConditions.position) > 0.2618 ||
-      Math.abs(initConditions.velocity) > 0.2618
-    ) {
+    } else if (Math.abs(initConditions.position) > 0.2618) {
       alert(
         "ERROR: La posicion y velocidad inicial deben estar en el rango de 15 grados"
       );
@@ -299,11 +278,6 @@ export const PenduloTorsionMain = () => {
       setAllNoTimeVars();
       setIsAnimating((prev) => !prev); // Alternar entre verdadero y falso
     }
-  };
-
-  //MOSSTRAR U OCULTAR GUIAS (TRANSPORTADOR)
-  const toggleGuides = () => {
-    setShowGuides((prev) => !prev);
   };
 
   //REINICIAR EL PROGRAMA
@@ -336,7 +310,6 @@ export const PenduloTorsionMain = () => {
     setTime(0);
     setPosition(0);
     setVelocity(0);
-    setAcceleration(0);
     setAmplitude(0);
     setEnergy(0);
   };
@@ -358,10 +331,10 @@ export const PenduloTorsionMain = () => {
           time={time}
           position={position}
           velocity={velocity}
-          acceleration={acceleration}
           amplitude={amplitude}
           energy={energy}
-          toggleGuides={toggleGuides}
+          setShowGuides={setShowGuides}
+          showGuides={showGuides}
         />
         <ScenePendulo
           dimensions={dimensions}

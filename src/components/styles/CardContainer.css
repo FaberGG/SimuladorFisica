@@ -10,7 +10,7 @@
   padding: 1rem;
   max-width: 1024px;
   margin: 0 auto;
-  font-family: var(--font-sans);
+  font-family: inherit;
 
   @media (max-width: 1080px) {
     display: flex;

@@ -1,12 +1,10 @@
 .controls-form-container {
-  padding-top: 1%;
   padding-left: 2%;
   width: 60vh;
   height: 100vh;
 
-  @media (max-width: 600px) {
-    width: 60vh;
-  }
+  display: flex;
+  align-items: center;
 }
 
 .controls-form-card {
@@ -14,8 +12,7 @@
   width: 100%;
   min-height: 50%;
   height: auto;
-
-  border-radius: 1% 1% 1% 1%;
+  border-radius: 10px;
 
   /* temporal */
   background-color: #1c1c1e;
@@ -23,7 +20,8 @@
 }
 
 .controls-form-header {
-  height: 5vh;
+  border-radius: 10px 10px 4px 4px;
+  height: 7vh;
   width: 100%;
   display: flex;
   padding: 5%;
@@ -35,7 +33,7 @@
   background-color: rgb(34, 41, 46);
 }
 .controls-form-container-forms-container {
-  max-height: 85vh; /* Limita el alto máximo del contenedor al 80% de la ventana */
+  max-height: 76vh;
   overflow-y: auto; /* Habilita el scroll vertical si el contenido es más grande */
   padding: 20px; /* Espaciado interno opcional */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra opcional */
@@ -62,21 +60,21 @@
 .controls-form-container-forms-container::-webkit-scrollbar-thumb:hover {
   background-color: #555; /* Color del thumb al pasar el mouse */
 }
-.controls-form-btn {
-  width: 35%;
-}
 .controls-form-title {
+  font-family: "Playwrite DE Grund", cursive;
   width: 65%;
-  font: bold;
+  font-size: larger;
+  font-weight: bolder;
 }
 
 .controls-form-select {
   appearance: none; /* Oculta el estilo predeterminado del navegador */
-  background-color: #1c1c1e; /* Fondo oscuro como en la imagen */
-  border: 1px solid #3a3a3c; /* Borde similar */
-  border-radius: 8px; /* Bordes redondeados */
+  background-color: #2c2c2e; /* Fondo oscuro para el input */
+  border: 1px solid #505050; /* Borde similar */
   color: #fff; /* Texto en blanco */
+  border-radius: 8px; /* Bordes redondeados */
   padding: 8px 12px; /* Espaciado interno */
+  margin: 16px 0px 20px 0px;
   font-size: 16px; /* Tamaño de la fuente */
   width: 100%; /* Ancho completo */
   outline: none; /* Elimina el borde al hacer focus */
@@ -99,7 +97,37 @@
 
 .form-label {
   color: #fff; /* Etiqueta de texto en blanco */
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: bold;
   margin-bottom: 4px;
   display: block;
+}
+
+/* ESTILOS PARA LOS BOTONES */
+
+.controls-form-btn {
+  font-family: sans-serif;
+  font-weight: bolder;
+  font-size: 16px;
+  padding: 6px 20px;
+  border-radius: 20px; /* Bordes redondeados */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Animación suave al pasar el cursor */
+}
+
+.btn-on-play,
+.btn-on-pause,
+.controls-form-reset-button {
+  background-color: #454545; /* Color de fondo oscuro */
+  color: white;
+}
+.btn-on-play:hover,
+.btn-on-pause:hover,
+.controls-form-guide-button:hover {
+  background-color: #2cb189; /* Un poco más claro al hacer hover */
+}
+.controls-form-reset-button:hover {
+  background-color: #c20000; /* Color de fondo oscuro */
+  color: white;
 }

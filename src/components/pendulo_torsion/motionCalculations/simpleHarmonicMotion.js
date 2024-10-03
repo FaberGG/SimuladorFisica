@@ -64,11 +64,6 @@ export function calculateVelocity(time, initAmplitude, phi, omega) {
   return -initAmplitude * omega * Math.sin(omega * time + phi);
 }
 
-export function calculateAcceleration(time, initAmplitude, phi, omega) {
-  // Parámetros: definir los parametros
-  return -initAmplitude * Math.pow(omega, 2) * Math.cos(omega * time + phi);
-}
-
 export function calculateEnergy(velocity, position, inertia, k) {
   // Parámetros: definir los parametros
   return 0.5 * (inertia * Math.pow(velocity, 2) + k * Math.pow(position, 2));

@@ -1,3 +1,10 @@
+/* Para Chrome, Safari, Edge y Opera */
+.form-input-input::-webkit-inner-spin-button,
+.form-input-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .form-input-wrapper {
   display: flex;
   align-items: center; /* Alinea el label y el input en el centro verticalmente */
@@ -9,7 +16,7 @@
 }
 
 .form-input-label {
-  color: #ffffff; /* Texto blanco */
+  color: #c0c0c0;
   font-size: 14px;
   margin-right: 16px; /* Espacio entre el label y el input */
   min-width: 100px; /* Ancho mínimo para el label */
