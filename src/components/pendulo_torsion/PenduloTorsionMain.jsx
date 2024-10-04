@@ -60,13 +60,6 @@ export const PenduloTorsionMain = () => {
   //TODOS LOS CALCULOS LOS IMPORTO EN EL SIGUIENTE OBJETO, SEGUN EL TIPO DE MOVIMIENTO
   const motionCalculations = getMotionCalculations(motionType);
 
-  //CALCULO PARA LA INERCIA (SIEMPRE SERA LA MISMA)
-  // Función para calcular el momento de inercia del sistema
-  const calculateInertia = (r, l) => {
-    //SE ASUME QUE masaEsfera=1kg y masaBarra = 3kg
-    return (4 / 5) * Math.pow(r, 2) + (3 / 4) * Math.pow(l, 2);
-  };
-
   //LLAMADO A LOS CALCULOS CON EL VALOR DE LAS CONDICIONES INICIALES
   const updateInitConditions = (name, value) => {
     setInitConditions((prev) => ({
@@ -193,7 +186,10 @@ export const PenduloTorsionMain = () => {
   //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
   const setAllNoTimeVars = () => {
     //calcula la inercia con los valores de radio esferas y longitud barra
-    const newInertia = calculateInertia(dimensions.r, dimensions.l);
+    const newInertia = motionCalculations.calculateInertia(
+      dimensions.r,
+      dimensions.l
+    );
 
     //CALCULA LA FRECUENCIA NATURAL DE MOV
     const newOmega = motionCalculations.calculateOmega(

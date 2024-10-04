@@ -1,3 +1,5 @@
+import { checkQuadrant } from "./globalCalculations";
+export * from "./globalCalculations";
 // SECCION CONDICIONES INICIALES
 
 // Función para calcular la amplitud inicial
@@ -22,11 +24,6 @@ export const calculateInitAmplitude = (
   }
 };
 
-// Función para calcular la frecuencia angular natural (omega)
-export const calculateOmega = (k, inertia) => {
-  return Math.sqrt(k / inertia);
-};
-
 // Función para calcular amortiguamineto phi
 export const calculatePhi = (initPosition, initVelocity, omega) => {
   let phi = 0;
@@ -48,16 +45,6 @@ export const calculatePhi = (initPosition, initVelocity, omega) => {
   }
 
   return phi;
-};
-
-// Función para calcular el periodo del péndulo amortiguado
-export const calculatePeriod = (omegaF) => {
-  return (2 * Math.PI) / omegaF;
-};
-
-// Función para calcular la frecuencia
-export const calculateFrequency = (period) => {
-  return 1 / period;
 };
 
 // SECCION FUNCIONES DE TIEMPO

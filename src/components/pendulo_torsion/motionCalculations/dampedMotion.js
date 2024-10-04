@@ -1,3 +1,7 @@
+//funcion para calcular el cuadrante
+import { checkQuadrant } from "./globalCalculations";
+export * from "./globalCalculations";
+
 // SECCION CONDICIONES INICIALES
 const dampedType = (omega, gamma) => {
   if (omega == gamma) {
@@ -43,11 +47,6 @@ export const calculateInitAmplitude = (
   return initPosition / Math.cos(phi);
 };
 
-// Función para calcular la frecuencia angular natural (omega)
-export const calculateOmega = (k, inertia) => {
-  return Math.sqrt(k / inertia);
-};
-
 export const calculateOmegaD = (omega, gamma) => {
   return Math.sqrt(Math.pow(omega, 2) - Math.pow(gamma / 2, 2));
 };
@@ -78,16 +77,6 @@ export const calculatePhi = (initPosition, initVelocity, omega) => {
   }
 
   return phi;
-};
-
-// Función para calcular el periodo del péndulo amortiguado
-export const calculatePeriod = (omegaD) => {
-  return (2 * Math.PI) / omegaD;
-};
-
-// Función para calcular la frecuencia
-export const calculateFrequency = (period) => {
-  return 1 / period;
 };
 
 // SECCION FUNCIONES DE TIEMPO
