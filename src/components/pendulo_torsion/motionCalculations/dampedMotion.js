@@ -74,7 +74,7 @@ export const calculateOmegaD = (omega, gamma) => {
 
 // Función para calcular amortiguamineto gamma r
 export const calculateGamma = (b, inertia) => {
-  return (b / 2) * inertia;
+  return b / (2 * inertia);
 };
 
 // Función para calcular amortiguamineto phi

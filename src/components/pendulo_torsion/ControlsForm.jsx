@@ -5,6 +5,7 @@ import { FormInput } from "../FormInput";
 export const ControlsForm = ({
   motionType,
   setMotionType,
+  dampedType,
   dimensions,
   setDimensions,
   isAnimating,
@@ -45,6 +46,68 @@ export const ControlsForm = ({
   const toggleGuides = () => {
     setShowGuides((prev) => !prev);
   };
+
+  //FUNCIONES PARA MOSTRAR LOS FORMULARIOS PARA CADA TIPO DE MOVIMIENTO
+
+  //ENTRADAS:
+  const dimensionsForcedMot = () => {
+    return (
+      <>
+        <FormInput
+          label="Amplitud Fuerza Externa (fo)"
+          name="Fo"
+          value={dimensions.Fo}
+          onChange={dimensionsinputChange}
+          disabled={isAnimating}
+          min={0}
+        />
+        <FormInput
+          label="Frecuencia Fuerza Externa (wf)"
+          name="omegaF"
+          value={dimensions.omegaF}
+          onChange={dimensionsinputChange}
+          disabled={isAnimating}
+          min={0}
+        />
+      </>
+    );
+  };
+  const dimensionsDampedMot = () => {
+    let dampedTypeEsp = "No Calculado";
+    switch (dampedType) {
+      case "criticallyDamped":
+        dampedTypeEsp = "Criticamente Amortiguado";
+        break;
+      case "subDamped":
+        dampedTypeEsp = "Sub-Amortiguado";
+        break;
+      case "overDamped":
+        dampedTypeEsp = "Sobre-Amortiguado";
+        break;
+      default:
+        break;
+    }
+    return (
+      <>
+        <FormInput
+          label={"Tipo de amortiguamiento : " + dampedTypeEsp}
+          value={0}
+          name="dampedType"
+          disabled={true}
+          onlyLabel={true}
+        />
+        <FormInput
+          label="Constante de amortiguamiento (b)"
+          name="b"
+          value={dimensions.b}
+          onChange={dimensionsinputChange}
+          disabled={isAnimating}
+          min={0}
+        />
+      </>
+    );
+  };
+
   return (
     <div className="controls-form-container">
       <div className="controls-form-card">
@@ -125,74 +188,6 @@ export const ControlsForm = ({
             Constantes
           </label>
           <form action="" className="controls-form-inputs-form">
-            {(() => {
-              switch (motionType) {
-                case "forcedDamped":
-                  return (
-                    <>
-                      <FormInput
-                        label="Constante de amortiguamiento (b)"
-                        name="b"
-                        value={dimensions.b}
-                        onChange={dimensionsinputChange}
-                        disabled={isAnimating}
-                        min={0}
-                      />
-                      <FormInput
-                        label="Amplitud Fuerza Externa (fo)"
-                        name="Fo"
-                        value={dimensions.Fo}
-                        onChange={dimensionsinputChange}
-                        disabled={isAnimating}
-                        min={0}
-                      />
-                      <FormInput
-                        label="Frecuencia Fuerza Externa (wf)"
-                        name="omegaF"
-                        value={dimensions.omegaF}
-                        onChange={dimensionsinputChange}
-                        disabled={isAnimating}
-                        min={0}
-                      />
-                    </>
-                  );
-                case "damped":
-                  return (
-                    <FormInput
-                      label="Constante de amortiguamiento (b)"
-                      name="b"
-                      value={dimensions.b}
-                      onChange={dimensionsinputChange}
-                      disabled={isAnimating}
-                      min={0}
-                    />
-                  );
-                case "forcedUndamped":
-                  return (
-                    <>
-                      <FormInput
-                        label="Amplitud Fuerza Externa (fo)"
-                        name="Fo"
-                        value={dimensions.Fo}
-                        onChange={dimensionsinputChange}
-                        disabled={isAnimating}
-                        min={0}
-                      />
-                      <FormInput
-                        label="Frecuencia Fuerza Externa (wf)"
-                        name="omegaF"
-                        value={dimensions.omegaF}
-                        onChange={dimensionsinputChange}
-                        disabled={isAnimating}
-                        min={0}
-                      />
-                    </>
-                  );
-
-                default:
-                  return null; //no renderiza nada
-              }
-            })()}
             <FormInput
               label="Constante de torsión (k)"
               name="k"
@@ -201,6 +196,23 @@ export const ControlsForm = ({
               disabled={isAnimating}
               min={0}
             />
+            {(() => {
+              switch (motionType) {
+                case "forcedDamped":
+                  return (
+                    <>
+                      {dimensionsDampedMot()}
+                      {dimensionsForcedMot()}
+                    </>
+                  );
+                case "damped":
+                  return dimensionsDampedMot();
+                case "forcedUndamped":
+                  return dimensionsForcedMot();
+                default:
+                  return null; //no renderiza nada
+              }
+            })()}
           </form>
           {/* condiciones iniciales */}
           <label className="controls-form-inputs-label">

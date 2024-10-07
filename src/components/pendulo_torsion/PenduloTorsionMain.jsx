@@ -16,8 +16,8 @@ export const PenduloTorsionMain = () => {
     k: 5,
     l: 1,
     r: 0.2,
-    Fo: 1,
-    omegaF: 1,
+    Fo: 1, //AMPLUTUD FUERZA EXTERNA
+    omegaF: 1, //FRECUENCIA FUERZA EXTERNA
     massSpheres: 1,
     massBar: 3,
   });
@@ -310,7 +310,7 @@ export const PenduloTorsionMain = () => {
   const resetSystem = () => {
     setIsAnimating(false);
     setReset(true);
-    setTimeout(() => setReset(false), 0);
+    setTimeout(() => setReset(false), 100);
 
     setvariables({
       InitAmplitude: 0,
@@ -336,6 +336,7 @@ export const PenduloTorsionMain = () => {
         <ControlsForm
           motionType={motionType}
           setMotionType={setMotionType}
+          dampedType={dampedType}
           dimensions={dimensions}
           setDimensions={setDimensions}
           isAnimating={isAnimating}
