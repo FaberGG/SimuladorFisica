@@ -11,9 +11,9 @@ export function calculateOmega(inertia, k) {
   return Math.sqrt(k / inertia);
 }
 
-// Función para calcular el periodo del péndulo amortiguado
-export const calculatePeriod = (omegaD) => {
-  return (2 * Math.PI) / omegaD;
+// Función para calcular el periodo
+export const calculatePeriod = (omega) => {
+  return (2 * Math.PI) / omega;
 };
 
 // Función para calcular la frecuencia
@@ -48,9 +48,6 @@ export const changeQuadrant = (angle, newQuadrant) => {
 
   // Calcula el valor relativo en el cuadrante original
   let angleInQuadrant = normalAngle % (Math.PI / 2);
-
-  console.log(checkQuadrant(angle));
-  console.log(angleInQuadrant);
 
   // Ajusta el ángulo al nuevo cuadrante
   switch (newQuadrant) {

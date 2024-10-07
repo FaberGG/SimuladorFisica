@@ -34,6 +34,14 @@ export default function BarWithSpheres({
     }
   }, [isAnimating]);
 
+  // Efecto para reiniciar el tiempo cuando reset es true
+  useEffect(() => {
+    if (reset) {
+      clockRef.current.stop(); // Detener el reloj
+      clockRef.current = new THREE.Clock(false); // Crear un nuevo reloj reseteado
+      setElapsedTime(0); // Reiniciar el tiempo acumulado
+    }
+  }, [reset]);
   useFrame(() => {
     if (isAnimating) {
       const currentElapsedTime = clockRef.current.getElapsedTime();

@@ -16,7 +16,6 @@ export const ControlsForm = ({
   time,
   position,
   velocity,
-  acceleration,
   amplitude,
   energy,
   setShowGuides,
@@ -270,7 +269,9 @@ export const ControlsForm = ({
             <FormInput
               label="Amplitud Inicial"
               name="ecr"
-              value={variables.InitAmplitude}
+              value={
+                variables.omega > variables.gamma ? variables.InitAmplitude : 0
+              }
               disabled={true}
             />
             <FormInput

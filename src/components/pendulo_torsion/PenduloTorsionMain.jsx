@@ -6,8 +6,10 @@ import { ControlsForm } from "./ControlsForm";
 import { getMotionCalculations } from "./motionCalculations/useMotionCalculations";
 
 export const PenduloTorsionMain = () => {
-  //estado para el tipo de movimiento seleccionado (simple, damped, forcedUndamped)
+  //estado para el tipo de movimiento seleccionado (simple, damped, forcedUndamped, forcedDamped)
   const [motionType, setMotionType] = useState("simple");
+  //estado auxiliar para el tipo de amortiguamiento si aplica
+  const [dampedType, setDampedType] = useState("NONE");
   //dimensiones
   const [dimensions, setDimensions] = useState({
     b: 0.1,
@@ -111,7 +113,8 @@ export const PenduloTorsionMain = () => {
             variables.omega,
             variables.omegaD,
             variables.gamma,
-            variables.phi
+            variables.phi,
+            dampedType
           )
         );
         // setVelocity(
@@ -122,6 +125,16 @@ export const PenduloTorsionMain = () => {
         //     variables.omega
         //   )
         // );
+
+        setAmplitude(
+          dampedType == "subDamped"
+            ? motionCalculations.calculateAmplitude(
+                time,
+                variables.InitAmplitude,
+                variables.gamma
+              )
+            : 0
+        );
         setEnergy(
           motionCalculations.calculateEnergy(
             velocity,
@@ -130,7 +143,6 @@ export const PenduloTorsionMain = () => {
             dimensions.k
           )
         );
-        setAmplitude(variables.InitAmplitude);
         break;
       case "forcedUndamped": //caso forzado no amortiguado
         setPosition(
@@ -197,25 +209,60 @@ export const PenduloTorsionMain = () => {
       dimensions.k
     );
 
-    let omegaTemp = 0; // toma el valor de w, wd u wf segun el tipo de movimiento
     let newGamma = 1;
     let newOmegaD = newOmega;
+    let newPhi = 0;
+    let newAmplitude = 0;
+    let newPeriod = 0;
+    let newFrequency = 0;
 
     switch (motionType) {
-      case "simple": //caso simple omegaTemp es la misma frecuancia natural
-        omegaTemp = newOmega;
+      case "simple":
+        newPhi = motionCalculations.calculatePhi(
+          initConditions.position,
+          initConditions.velocity,
+          newOmega
+        );
+        //calcula la amplitud inicial segun el tipo de mov
+        newAmplitude = motionCalculations.calculateInitAmplitude(
+          newPhi,
+          initConditions.position,
+          initConditions.velocity,
+          newOmega
+        );
+        //calcula el periodo segun el tipo de mov
+        newPeriod = motionCalculations.calculatePeriod(newOmega);
+        //calcula la frecuencia a partir del periodo
+        newFrequency = motionCalculations.calculateFrequency(newPeriod);
+        //calcula el valor de phi segun el tipo de movimiento
         break;
       case "damped": //caso amortiguado omegaTemp es omegaD
-        newGamma = motionCalculations.calculateGamma(
-          dimensions.b,
-          variables.inertia
-        );
-        newOmegaD = motionCalculations.calculateOmegaD(newOmega, newGamma);
+        newGamma = motionCalculations.calculateGamma(dimensions.b, newInertia);
+        const type = motionCalculations.checkDampedType(newOmega, newGamma);
 
-        omegaTemp = newOmegaD;
-        break;
+        if (type == "subDamped") {
+          newOmegaD = motionCalculations.calculateOmegaD(newOmega, newGamma);
+          newPhi = motionCalculations.calculatePhi(
+            initConditions.position,
+            initConditions.velocity,
+            newOmegaD,
+            newGamma
+          );
+          newPeriod = motionCalculations.calculatePeriod(newOmegaD);
+          newFrequency = motionCalculations.calculateFrequency(newOmegaD);
+        }
+        newAmplitude = motionCalculations.calculateInitAmplitude(
+          newPhi,
+          initConditions.position,
+          initConditions.velocity,
+          newOmega,
+          newOmegaD,
+          newGamma,
+          type
+        );
+        setDampedType(type);
+
       case "forcedUndamped": //caso forzado no amortiguado
-        omegaTemp = dimensions.omegaF;
         break;
       case "forcedDamped": //caso forzado no amortiguado
         break;
@@ -227,24 +274,6 @@ export const PenduloTorsionMain = () => {
         );
         break;
     }
-
-    const newPhi = motionCalculations.calculatePhi(
-      initConditions.position,
-      initConditions.velocity,
-      omegaTemp
-    );
-    //calcula la amplitud inicial segun el tipo de mov
-    let newAmplitude = motionCalculations.calculateInitAmplitude(
-      newPhi,
-      initConditions.position,
-      initConditions.velocity,
-      omegaTemp
-    );
-    //calcula el periodo segun el tipo de mov
-    const newPeriod = motionCalculations.calculatePeriod(omegaTemp);
-    //calcula la frecuencia a partir del periodo
-    const newFrequency = motionCalculations.calculateFrequency(newPeriod);
-    //calcula el valor de phi segun el tipo de movimiento
 
     // Actualiza el estado con las nuevas variables calculadas
     setvariables({
@@ -258,6 +287,7 @@ export const PenduloTorsionMain = () => {
       frecuency: newFrequency,
     });
   };
+
   //CONTROLAR ANIMACION
   const toggleAnimation = () => {
     //al iniciar animacion, calcular todas las variables que no dependen del tiempo
@@ -282,16 +312,6 @@ export const PenduloTorsionMain = () => {
     setReset(true);
     setTimeout(() => setReset(false), 0);
 
-    setDimensions({
-      b: 1,
-      k: 5,
-      l: 1,
-      r: 0.2,
-      feFrecuency: 0,
-      massSpheres: 1,
-      massBar: 3,
-    });
-    setInitConditions({ position: 0, velocity: 0 });
     setvariables({
       InitAmplitude: 0,
       inertia: 0,
@@ -304,9 +324,9 @@ export const PenduloTorsionMain = () => {
       frecuency: 0,
     });
     setTime(0);
-    setPosition(0);
-    setVelocity(0);
-    setAmplitude(0);
+    setPosition(initConditions.position);
+    setVelocity(initConditions.velocity);
+    setAmplitude(variables.InitAmplitude);
     setEnergy(0);
   };
 
