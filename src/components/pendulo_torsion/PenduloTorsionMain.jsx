@@ -10,6 +10,8 @@ export const PenduloTorsionMain = () => {
   const [motionType, setMotionType] = useState("simple");
   //estado auxiliar para el tipo de amortiguamiento si aplica
   const [dampedType, setDampedType] = useState("NONE");
+  //estado auxiliar que revela si existe resonancia en el sistema
+  const [resonance, setResonance] = useState(false);
   //dimensiones
   const [dimensions, setDimensions] = useState({
     b: 0.1,
@@ -24,7 +26,7 @@ export const PenduloTorsionMain = () => {
 
   //condiciones iniciales
   const [initConditions, setInitConditions] = useState({
-    position: 0.22,
+    position: -0.22,
     velocity: 0,
   });
 
@@ -38,6 +40,7 @@ export const PenduloTorsionMain = () => {
     gamma: 0, //amortiguamiento
     period: 0,
     frecuency: 0,
+    delta: 0
   });
 
   const [time, setTime] = useState(0);
@@ -78,6 +81,7 @@ export const PenduloTorsionMain = () => {
   const setAllTimeVars = (time) => {
     setTime(time);
     switch (motionType) {
+     
       case "simple":
         setPosition(
           motionCalculations.calculatePosition(
@@ -105,6 +109,7 @@ export const PenduloTorsionMain = () => {
         );
         setAmplitude(variables.InitAmplitude);
         break;
+   
       case "damped":
         setPosition(
           motionCalculations.calculatePosition(
@@ -117,14 +122,15 @@ export const PenduloTorsionMain = () => {
             dampedType
           )
         );
-        // setVelocity(
-        //   motionCalculations.calculateVelocity(
-        //     time,
-        //     variables.InitAmplitude,
-        //     variables.phi,
-        //     variables.omega
-        //   )
-        // );
+        setVelocity(
+           motionCalculations.calculateVelocity(
+             time,
+             variables.InitAmplitude,
+             variables.phi,
+             variables.omega
+        )
+     );
+
 
         setAmplitude(
           dampedType == "subDamped"
@@ -143,8 +149,10 @@ export const PenduloTorsionMain = () => {
             dimensions.k
           )
         );
+
         break;
       case "forcedUndamped": //caso forzado no amortiguado
+      
         setPosition(
           motionCalculations.calculatePosition(
             time,
@@ -152,38 +160,59 @@ export const PenduloTorsionMain = () => {
             variables.phi,
             variables.omega,
             dimensions.omegaF,
-            dimensions.Fo,
-            variables.inertia
+            resonance
           )
         );
-        setVelocity(
-          motionCalculations.calculateVelocity(
+         setVelocity(
+           motionCalculations.calculateVelocity(
+             time,
+             variables.InitAmplitude,
+             variables.phi,
+             variables.omega,
+             dimensions.omegaF,
+             //agrego Fo, inercia
+             dimensions.Fo,
+             variables.inertia
+           )
+         );
+
+         
+        setEnergy(0);
+        setAmplitude(variables.InitAmplitude
+        );
+        break;
+      case "forcedDamped": //caso forzado amortiguado
+
+
+         setPosition(
+          motionCalculations.calculatePosition(
             time,
-            variables.InitAmplitude,
-            variables.phi,
             variables.omega,
             dimensions.omegaF,
-            dimensions.Fo,
-            variables.inertia
+            variables.InitAmplitude,
+            variables.phi,
           )
         );
         setEnergy(
+          //FALTA INSTANCIAR DELTA PORQUE NO SE COMO XD  delta
           motionCalculations.calculateEnergy(
-            velocity,
-            position,
+            time,
+            variables.InitAmplitude,
+            variables.gamma,
+            dimensions.omegaF,
             variables.inertia,
-            dimensions.k
+            dimensions.k,
+
           )
         );
         setAmplitude(
           motionCalculations.calculateAmplitude(
             time,
             variables.InitAmplitude,
-            variables.gamma
+            //quito variables.gamma
           )
         );
-        break;
-      case "forcedDamped": //caso forzado no amortiguado
+
         break;
       default: // Tipo de mov no implementado
         alert(
@@ -209,13 +238,15 @@ export const PenduloTorsionMain = () => {
       dimensions.k
     );
 
+    //vars temps
     let newGamma = 1;
     let newOmegaD = newOmega;
     let newPhi = 0;
     let newAmplitude = 0;
     let newPeriod = 0;
     let newFrequency = 0;
-
+    let newResonance = false;
+    let newDelta = 0;
     switch (motionType) {
       case "simple":
         newPhi = motionCalculations.calculatePhi(
@@ -236,7 +267,8 @@ export const PenduloTorsionMain = () => {
         newFrequency = motionCalculations.calculateFrequency(newPeriod);
         //calcula el valor de phi segun el tipo de movimiento
         break;
-      case "damped": //caso amortiguado omegaTemp es omegaD
+    
+       case "damped": //caso amortiguado omegaTemp es omegaD
         newGamma = motionCalculations.calculateGamma(dimensions.b, newInertia);
         const type = motionCalculations.checkDampedType(newOmega, newGamma);
 
@@ -248,8 +280,6 @@ export const PenduloTorsionMain = () => {
             newOmegaD,
             newGamma
           );
-          newPeriod = motionCalculations.calculatePeriod(newOmegaD);
-          newFrequency = motionCalculations.calculateFrequency(newOmegaD);
         }
         newAmplitude = motionCalculations.calculateInitAmplitude(
           newPhi,
@@ -261,10 +291,53 @@ export const PenduloTorsionMain = () => {
           type
         );
         setDampedType(type);
+        break;
 
       case "forcedUndamped": //caso forzado no amortiguado
+        //Revisa si existe resonancia
+        newResonance = motionCalculations.checkResonance(omega, omegaF);
+        newPhi = motionCalculations.calculatePhi(
+          initConditions.position,
+          initConditions.velocity,
+          newOmega
+        );
+        newAmplitude = motionCalculations.calculateForcedInitAmplitude(
+          newPhi,
+          initConditions.position,
+          initConditions.velocity,
+          newOmega,
+          dimensions.omegaF,
+          dimensions.Fo,
+          newInertia,
+         
+        );
+        //calcula el periodo segun el tipo de mov
+        newPeriod = motionCalculations.calculatePeriod(newOmega);
+        //calcula la frecuencia a partir del periodo
+        newFrequency = motionCalculations.calculateFrequency(newPeriod);
+        //calcula el valor de phi segun el tipo de movimiento
+       
         break;
-      case "forcedDamped": //caso forzado no amortiguado
+      case "forcedDamped": //caso forzado amortiguado
+      newGamma = motionCalculations.calculateGamma(dimensions.b, newInertia);
+      const typeforcedDamped = motionCalculations.checkDampedType(newOmega, newGamma);
+     
+        newAmplitude = motionCalculations.calculateInitAmplitude(
+          dimensions.Fo,
+          dimensions.k,
+          dimensions.omegaF,
+          newOmega,
+          newInertia,
+          newGamma,
+        );
+
+        newDelta = motionCalculations.calculateDelta(
+          newOmega,
+          dimensions.omegaF,
+          newGamma
+        );
+        setDampedType(typeforcedDamped);
+      
         break;
       default: // Tipo de mov no implementado
         alert(
@@ -285,6 +358,7 @@ export const PenduloTorsionMain = () => {
       gamma: newGamma,
       period: newPeriod,
       frecuency: newFrequency,
+      delta: newDelta
     });
   };
 

@@ -92,7 +92,7 @@ export const calculatePhi = (initPosition, initVelocity, omegaD, gamma) => {
   }
 
   //calculo la arco-tangente
-  phi = Math.atan(-gamma / omegaD - initVelocity / (omegaD * initPosition));
+  phi = Math.abs(Math.atan(-gamma / omegaD - initVelocity / (omegaD * initPosition)));
 
   //calculo el valor de la restriccion
   if (initPosition > 0) {
