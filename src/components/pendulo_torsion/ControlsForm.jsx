@@ -54,7 +54,7 @@ export const ControlsForm = ({
     return (
       <>
         <FormInput
-          label="Amplitud Fuerza Externa (fo)"
+          label="Amplitud Fuerza Externa (to)"
           name="Fo"
           value={dimensions.Fo}
           onChange={dimensionsinputChange}
@@ -273,17 +273,20 @@ export const ControlsForm = ({
             />
 
             <FormInput
-              label={(motionType == "forcedUndamped" || motionType == "forcedDamped") ? "Potencia": "Energia (j)"}
+              label={
+                motionType == "forcedUndamped" || motionType == "forcedDamped"
+                  ? "Potencia"
+                  : "Energia (j)"
+              }
               name="energy"
               disabled={true}
               value={energy}
             />
+
             <FormInput
               label="Amplitud Inicial"
-              name="ecr"
-              value={
-                variables.omega > variables.gamma ? variables.InitAmplitude : 0
-              }
+              name="initAmplitude"
+              value={variables.InitAmplitude}
               disabled={true}
             />
             <FormInput
@@ -292,7 +295,6 @@ export const ControlsForm = ({
               value={amplitude}
               disabled={true}
             />
-
             {(() => {
               if (motionType == "forcedDamped" || motionType == "damped")
                 return (
@@ -319,7 +321,6 @@ export const ControlsForm = ({
                   </>
                 );
             })()}
-
             <FormInput
               label="Momento de inercia (I)"
               name="inertia"

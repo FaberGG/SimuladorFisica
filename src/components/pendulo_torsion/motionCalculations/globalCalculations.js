@@ -5,6 +5,11 @@ export const calculateInertia = (r, l) => {
   return (4 / 5) * Math.pow(r, 2) + (3 / 4) * Math.pow(l, 2);
 };
 
+export const roundDecimal = (numero, decimales) => {
+  const factor = 10 ** decimales;
+  return Math.round(numero * factor) / factor;
+};
+
 export function calculateOmega(inertia, k) {
   // Calcula la frecuencia angular omega (frecuencia natural)
   // Parámetros: definir los parametros
@@ -22,7 +27,6 @@ export const calculateFrequency = (period) => {
 };
 
 export const checkQuadrant = (angle) => {
-
   if (angle >= 0 && angle < Math.PI / 2) {
     return 1;
   } else if (angle >= Math.PI / 2 && angle < Math.PI) {
