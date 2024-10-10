@@ -273,7 +273,7 @@ export const ControlsForm = ({
             />
 
             <FormInput
-              label="Energia Mecanica (J)"
+              label={(motionType == "forcedUndamped" || motionType == "forcedDamped") ? "Potencia": "Energia (j)"}
               name="energy"
               disabled={true}
               value={energy}
@@ -307,6 +307,13 @@ export const ControlsForm = ({
                       label="Frecuencia angular amortiguada (omega d)"
                       name="omegaD"
                       value={variables.omegaD}
+                      disabled={true}
+                    />
+
+                    <FormInput
+                      label="Delta"
+                      name="delta"
+                      value={variables.delta}
                       disabled={true}
                     />
                   </>

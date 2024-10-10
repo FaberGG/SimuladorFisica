@@ -14,7 +14,7 @@ export function calculatePhi(initPosition, initVelocity, omega) {
     return initPosition > 0 ? 0 : Math.PI;
   }
   // Calcula phi con la arctan
-  phi = Math.atan(-initVelocity / (omega * initPosition));
+  phi = Math.abs(Math.atan(-initVelocity / (omega * initPosition)));
 
   if (initPosition > 0) {
     //posicIon inicial positiva
