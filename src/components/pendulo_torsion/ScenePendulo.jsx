@@ -1,8 +1,9 @@
-import React from "react";
-import { Canvas } from "@react-three/fiber";
+import React, { useRef, useEffect, useState } from "react";
+import { useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import BarWithSpheres from "./BarWithSpheres";
 import Protractor from "./Protractor";
+import * as THREE from "three";
 
 export default function ScenePendulo({
   dimensions,
@@ -12,8 +13,40 @@ export default function ScenePendulo({
   reset,
   showGuides,
 }) {
-  // estilo del canvas
-  let canvasStyle = { display: "flex", height: "100vh" };
+  // Variables para gestionar el tiempo
+  const [elapsedTime, setElapsedTime] = useState(0); // Tiempo acumulado antes de la pausa
+  const clockRef = useRef(new THREE.Clock(false)); // Reloj para el cálculo del tiempo
+
+  // Efecto para manejar la pausa/reanudación del reloj
+  useEffect(() => {
+    if (isAnimating) {
+      clockRef.current.start(); // Iniciar el reloj cuando la animación comience
+    } else {
+      clockRef.current.stop(); // Detener el reloj si se pausa
+      setElapsedTime((prev) => prev + clockRef.current.getElapsedTime()); // Acumular el tiempo transcurrido antes de pausar
+    }
+  }, [isAnimating]);
+
+  // Efecto para reiniciar el tiempo cuando reset es true
+  useEffect(() => {
+    if (reset) {
+      clockRef.current.stop(); // Detener el reloj
+      clockRef.current = new THREE.Clock(false); // Crear un nuevo reloj reseteado
+      setElapsedTime(0); // Reiniciar el tiempo acumulado
+    }
+  }, [reset]);
+
+  useEffect(() => {
+    if (isAnimating) {
+      const interval = setInterval(() => {
+        const currentElapsedTime = clockRef.current.getElapsedTime();
+        const totalElapsedTime = elapsedTime + currentElapsedTime; // Tiempo total transcurrido
+        setAllTimeVars(totalElapsedTime);
+      }, 16); // Aproximadamente 60 FPS
+
+      return () => clearInterval(interval);
+    }
+  }, [isAnimating, elapsedTime, setAllTimeVars]);
 
   // Posiciones calculadas
   const ceilingHeight = 4 * dimensions.r * dimensions.l;
@@ -22,7 +55,7 @@ export default function ScenePendulo({
     (0.1 * dimensions.r + 0.1 * dimensions.l * (0.003 * dimensions.r)) / 4;
 
   return (
-    <Canvas style={canvasStyle}>
+    <>
       {/* libreria para los controles de la camara */}
       <OrbitControls />
       {/* luz a la escena */}
@@ -49,16 +82,14 @@ export default function ScenePendulo({
       {showGuides ? <axesHelper args={[dimensions.l]} /> : <></>}
 
       {/* TRANSPORTADOR PARA TENER REFERENCIA DEL ANGULO */}
-
       {showGuides ? <Protractor length={dimensions.l / 2} /> : ""}
+
       <BarWithSpheres
         length={dimensions.l}
         radius={dimensions.r}
-        setAllTimeVars={setAllTimeVars}
-        position={position} //angulo theta a mostrar
+        position={position} // ángulo theta a mostrar
         isAnimating={isAnimating}
-        reset={reset}
       ></BarWithSpheres>
-    </Canvas>
+    </>
   );
 }

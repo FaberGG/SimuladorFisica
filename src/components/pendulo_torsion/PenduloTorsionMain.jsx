@@ -1,6 +1,8 @@
 import React from "react";
 import { useState } from "react";
 import ScenePendulo from "./ScenePendulo";
+import { Canvas } from "@react-three/fiber";
+
 import { ControlsForm } from "./ControlsForm";
 //importo las funciones segun el tipo de movimiento
 import { getMotionCalculations } from "./motionCalculations/useMotionCalculations";
@@ -432,14 +434,16 @@ export const PenduloTorsionMain = () => {
           setShowGuides={setShowGuides}
           showGuides={showGuides}
         />
-        <ScenePendulo
-          dimensions={dimensions}
-          setAllTimeVars={setAllTimeVars}
-          position={position}
-          isAnimating={isAnimating}
-          reset={reset}
-          showGuides={showGuides}
-        />
+        <Canvas style={{ display: "flex", height: "100vh" }}>
+          <ScenePendulo
+            dimensions={dimensions}
+            setAllTimeVars={setAllTimeVars}
+            position={position}
+            isAnimating={isAnimating}
+            reset={reset}
+            showGuides={showGuides}
+          />
+        </Canvas>
       </div>
     </>
   );

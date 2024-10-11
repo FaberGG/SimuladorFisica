@@ -17,6 +17,10 @@ function App() {
           path="/SimuladorFisica/pendulo-torsion"
           element={<PenduloTorsionMain />}
         ></Route>
+        <Route
+          path="/SimuladorFisica/pendulos-acoplados"
+          element={<PenduloTorsionMain />}
+        ></Route>
       </Routes>
     </>
   );

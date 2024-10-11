@@ -1,7 +1,6 @@
+import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { useRef, useState, useEffect } from "react";
 import React from "react";
-import * as THREE from "three"; // Asegúrate de importar THREE
 
 function Sphere({ radius, xPosition, color }) {
   return (
@@ -12,44 +11,14 @@ function Sphere({ radius, xPosition, color }) {
   );
 }
 
-export default function BarWithSpheres({
-  length,
-  radius,
-  setAllTimeVars,
-  position,
-  isAnimating,
-  reset,
-}) {
+export default function BarWithSpheres({ length, radius, position }) {
   const groupRef = useRef();
-  const [elapsedTime, setElapsedTime] = useState(0); // Tiempo acumulado antes de la pausa
-  const clockRef = useRef(new THREE.Clock(false)); // Reloj para el cálculo del tiempo
 
-  // Efecto para manejar la pausa/reanudación del reloj
-  useEffect(() => {
-    if (isAnimating) {
-      clockRef.current.start(); // Iniciar el reloj cuando la animación comience
-    } else {
-      clockRef.current.stop(); // Detener el reloj si se pausa
-      setElapsedTime((prev) => prev + clockRef.current.getElapsedTime()); // Acumular el tiempo transcurrido antes de pausar
-    }
-  }, [isAnimating]);
-
-  // Efecto para reiniciar el tiempo cuando reset es true
-  useEffect(() => {
-    if (reset) {
-      clockRef.current.stop(); // Detener el reloj
-      clockRef.current = new THREE.Clock(false); // Crear un nuevo reloj reseteado
-      setElapsedTime(0); // Reiniciar el tiempo acumulado
-    }
-  }, [reset]);
+  // Uso de elapsedTime para controlar la rotación o el estado de la animación
   useFrame(() => {
-    if (isAnimating) {
-      const currentElapsedTime = clockRef.current.getElapsedTime();
-      const totalElapsedTime = elapsedTime + currentElapsedTime; // Tiempo total transcurrido
-      setAllTimeVars(totalElapsedTime);
-    }
-    groupRef.current.rotation.y = position;
+    groupRef.current.rotation.y = position; // Puedes usar elapsedTime aquí para ajustar la posición/rotación si es necesario
   });
+
   return (
     <>
       <group ref={groupRef} position={[0, 0, 0]}>

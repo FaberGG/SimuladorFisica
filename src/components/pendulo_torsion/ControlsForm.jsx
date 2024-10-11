@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/ControlsForm.css";
 import { FormInput } from "../FormInput";
+import { EcuationLabel } from "../EcuationLabel";
 
 export const ControlsForm = ({
   motionType,
@@ -45,6 +46,22 @@ export const ControlsForm = ({
   //MOSSTRAR U OCULTAR GUIAS (TRANSPORTADOR)
   const toggleGuides = () => {
     setShowGuides((prev) => !prev);
+  };
+
+  const findEcuationMotion = () => {
+    switch (motionType) {
+      case "simple":
+        return "θ(t) = C cos(ω₀ t + ϕ)";
+        break;
+      case "damped":
+        break;
+      case "forcedUndamped":
+        break;
+      case "forcedDamped":
+        break;
+      default:
+        break;
+    }
   };
 
   //FUNCIONES PARA MOSTRAR LOS FORMULARIOS PARA CADA TIPO DE MOVIMIENTO
@@ -112,7 +129,7 @@ export const ControlsForm = ({
     <div className="controls-form-container">
       <div className="controls-form-card">
         <div className="controls-form-header">
-          <label className="controls-form-title">Pendulo de torsion</label>
+          <label className="controls-form-title">{"Péndulo de torsión"}</label>
 
           {/* BOTON PARA EJECUTAR LOS CALCULOS */}
           <button
@@ -248,6 +265,11 @@ export const ControlsForm = ({
               disabled={isAnimating}
             />
           </form>
+          <label className="controls-form-inputs-label">
+            Ecuacion de movimiento
+          </label>
+          <EcuationLabel ecuation={findEcuationMotion()} />
+
           {/* variables del sistema */}
           <label className="controls-form-inputs-label">
             Variables del sistema
