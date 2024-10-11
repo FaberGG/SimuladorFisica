@@ -1,5 +1,5 @@
 //import React from "react";
-import "./styles/cardContainer.css";
+import "./styles/CardContainer.css";
 import Card from "./Card";
 
 //imagenes usadas
