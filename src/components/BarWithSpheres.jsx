@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import React from "react";
-
+import Protractor from "./Protractor";
 function Sphere({ radius, xPosition, color }) {
   return (
     <mesh position={[xPosition, 0, 0]}>
@@ -16,6 +16,7 @@ export default function BarWithSpheres({
   radius,
   thetaPosition,
   yposition,
+  showGuides,
 }) {
   const groupRef = useRef();
 
@@ -44,6 +45,12 @@ export default function BarWithSpheres({
         {/* Esfera en el extremo derecho */}
         <Sphere radius={radius} xPosition={length / 2} color="red" />
       </group>
+      {/* TRANSPORTADOR PARA TENER REFERENCIA DEL ANGULO */}
+      {showGuides ? (
+        <Protractor length={length / 2} yposition={yposition} />
+      ) : (
+        ""
+      )}
     </>
   );
 }

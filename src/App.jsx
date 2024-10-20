@@ -15,7 +15,7 @@ function App() {
         ></Route>
         <Route
           path="/pendulos-acoplados"
-          element={<PenduloTorsionMain isCoupled={false} />}
+          element={<PenduloTorsionMain isCoupled={true} />}
         ></Route>
       </Routes>
     </>

@@ -11,11 +11,14 @@ export default function Protractor({ length, yposition }) {
   const radius = length / 2;
 
   return (
-    <mesh position={[0, yposition, 0]} rotation={[0, Math.PI / 2, 0]}>
-      {/* Crear el disco en el plano XY */}
-      <cylinderGeometry args={[radius, radius, 0.01, 64]} />
-      {/* Aplicar la textura al disco */}
-      <meshStandardMaterial map={texture} opacity={0.1} />
-    </mesh>
+    <>
+      <mesh position={[0, yposition, 0]} rotation={[0, Math.PI / 2, 0]}>
+        {/* Crear el disco en el plano XY */}
+        <cylinderGeometry args={[radius, radius, 0.01, 64]} />
+        {/* Aplicar la textura al disco */}
+        <meshStandardMaterial map={texture} opacity={0.1} />
+      </mesh>
+      <axesHelper position={[0, yposition, 0]} args={[length / 1.5]} />
+    </>
   );
 }

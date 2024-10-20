@@ -29,12 +29,6 @@ const ScenePendulo = forwardRef(
     const [elapsedTime, setElapsedTime] = useState(0); // Tiempo acumulado antes de la pausa
     const clockRef = useRef(new THREE.Clock(false)); // Reloj para el cálculo del tiempo
 
-    // dimensiones proporcionales para los objetos
-    const ceilingHeight = 4 * dimensions.r * dimensions.l;
-    const wireHeight = ceilingHeight / 2;
-    const wireRadius =
-      (0.1 * dimensions.r + 0.1 * dimensions.l * (0.003 * dimensions.r)) / 4;
-
     //CALCULOS
 
     //LLAMADO A LOS CALCULOS PARA CADA VALOR DE TIEMPO (CUANDO ESTA EN EJECUCION)
@@ -42,10 +36,10 @@ const ScenePendulo = forwardRef(
       setTime(time);
       let newPosition = 0;
       let newVelocity = 0;
-      let newAmplitude = 0;
+      let newAmplitude = variables.InitAmplitude;
       let newPosition2 = 0;
       let newVelocity2 = 0;
-      let newAmplitude2 = 0;
+      let newAmplitude2 = variables.InitAmplitude2;
       let newEnergy = 0;
 
       setTimeVariables({
@@ -123,6 +117,13 @@ const ScenePendulo = forwardRef(
       }
     }, [isAnimating, elapsedTime, setAllTimeVars]);
 
+    // dimensiones proporcionales para los objetos
+    const barsDistanceBtwn = 1.5 * (dimensions.r + dimensions.r2);
+    const ceilingHeight =
+      barsDistanceBtwn + 0.5 * (dimensions.l + dimensions.l2);
+    const wirePosition = ceilingHeight / 2 - barsDistanceBtwn / 2;
+    const wireRadius =
+      (0.1 * dimensions.r + 0.1 * dimensions.l * (0.003 * dimensions.r)) / 4;
     return (
       <>
         {/* libreria para los controles de la camara */}
@@ -130,9 +131,8 @@ const ScenePendulo = forwardRef(
         {/* luz a la escena */}
         <directionalLight position={[0, 0, 2]} intensity={0.7} />
         <ambientLight intensity={0.5} />
-
         {/* Bloque techo */}
-        <mesh position={[0, ceilingHeight, 0]}>
+        <mesh position={[0, ceilingHeight - barsDistanceBtwn / 2, 0]}>
           <boxGeometry args={[2 * dimensions.l, 0.2, 2 * dimensions.l]} />
           <meshStandardMaterial
             color="white"
@@ -142,26 +142,26 @@ const ScenePendulo = forwardRef(
             opacity={0.7}
           />
         </mesh>
-
         {/* Alambre */}
-        <mesh position={[0, wireHeight, 0]}>
+        <mesh position={[0, wirePosition, 0]}>
           <cylinderGeometry args={[wireRadius, wireRadius, ceilingHeight, 8]} />
           <meshStandardMaterial color="white" metalness={0.7} roughness={0.3} />
         </mesh>
-        {showGuides ? <axesHelper args={[dimensions.l]} /> : <></>}
-
-        {/* TRANSPORTADOR PARA TENER REFERENCIA DEL ANGULO */}
-        {showGuides ? (
-          <Protractor length={dimensions.l / 2} yposition={0} />
-        ) : (
-          ""
-        )}
 
         <BarWithSpheres
           length={dimensions.l}
           radius={dimensions.r}
-          thetaPosition={position} // ángulo theta a mostrar
-          yposition={0}
+          thetaPosition={position.position} // ángulo theta a mostrar
+          yposition={barsDistanceBtwn / 2}
+          showGuides={showGuides}
+        ></BarWithSpheres>
+
+        <BarWithSpheres
+          length={dimensions.l2}
+          radius={dimensions.r2}
+          thetaPosition={position.position2} // ángulo theta a mostrar
+          yposition={-barsDistanceBtwn / 2}
+          showGuides={showGuides}
         ></BarWithSpheres>
       </>
     );

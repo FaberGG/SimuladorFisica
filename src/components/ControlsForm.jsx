@@ -1,4 +1,5 @@
 import React from "react";
+import { useState } from "react";
 import "./styles/ControlsForm.css";
 import { FormInput } from "./FormInput";
 import { EcuationLabel } from "./EcuationLabel";
@@ -22,6 +23,9 @@ export const ControlsForm = ({
   showGuides,
   isCoupled,
 }) => {
+  //Auxiliar para llevar seleccion de unidades
+  const [inDegrees, setInDegrees] = useState(false);
+
   // Handler para actualizar dimensiones y convertir valores a float
   const handleDimensionChange = (name, value) => {
     setDimensions((prev) => ({
@@ -31,14 +35,45 @@ export const ControlsForm = ({
   };
 
   // Handler para actualizar condiciones iniciales
-  const handleInitConditionChange = (
-    name,
-    value,
-    inDegrees = false,
-    pendulum = 1
-  ) => {
-    const updatedValue = inDegrees ? value * (Math.PI / 180) : value;
-    onInitConditionChange(name, updatedValue, pendulum); // NUEVO: incluye el péndulo
+  const handleInitConditionChange = (name, value) => {
+    //const updatedValue = inDegrees ? value * (Math.PI / 180) : value;
+    onInitConditionChange(name, value);
+  };
+
+  const renderMotionTypeSelect = () => {
+    return (
+      <>
+        <label className="form-label">Tipo de movimiento</label>
+        <select
+          value={motionType}
+          onChange={(e) => setMotionType(e.target.value)}
+          disabled={isAnimating}
+          className="controls-form-select"
+        >
+          <option value="simple">Movimiento armónico simple</option>
+          <option value="damped">Movimiento amortiguado</option>
+          <option value="forcedUndamped">
+            Movimiento forzado no amortiguado
+          </option>
+          <option value="forcedDamped">Movimiento forzado amortiguado</option>
+        </select>
+      </>
+    );
+  };
+
+  const renderDegRadSelect = () => {
+    return (
+      <>
+        <select
+          value={inDegrees}
+          onChange={(e) => setInDegrees(e.target.value)}
+          className="controls-form-select"
+        >
+          <option value={false}>Radianes</option>
+          <option value={true}>Grados</option>
+        </select>
+      </>
+    );
   };
 
   // Traducción del tipo de amortiguamiento
@@ -120,7 +155,7 @@ export const ControlsForm = ({
   // NUEVO: Renderiza campos para el segundo péndulo y la constante de acoplamiento
   const renderCoupledPendulumInputs = () => (
     <>
-      <h3>Péndulo 2</h3>
+      <label htmlFor="">Péndulo 2</label>
       <FormInput
         label="Longitud de la barra 2 (m)"
         name="l2"
@@ -136,16 +171,6 @@ export const ControlsForm = ({
         onChange={handleDimensionChange}
         disabled={isAnimating}
         min={0}
-      />
-      <FormInput
-        label="Masa de las esferas 2 (Kg)"
-        value={dimensions.massSpheres2}
-        disabled={true}
-      />
-      <FormInput
-        label="Masa de la barra 2 (Kg)"
-        value={dimensions.massBar2}
-        disabled={true}
       />
       <FormInput
         label="Constante de torsión 2 (k2)"
@@ -164,7 +189,7 @@ export const ControlsForm = ({
         {/* HEADER */}
         <div className="controls-form-header">
           <label className="controls-form-title">
-            {isCoupled ? "Péndulo de torsión acoplado" : "Péndulo de torsión"}
+            {isCoupled ? "Péndulos acoplados" : "Péndulo de torsión"}
           </label>
           <button
             onClick={toggleAnimation}
@@ -178,25 +203,23 @@ export const ControlsForm = ({
         </div>
 
         <div className="controls-form-container-forms-container">
-          {/* Tipo de movimiento */}
-          <label className="form-label">Tipo de movimiento</label>
-          <select
-            value={motionType}
-            onChange={(e) => setMotionType(e.target.value)}
-            disabled={isAnimating}
-            className="controls-form-select"
-          >
-            <option value="simple">Movimiento armónico simple</option>
-            <option value="damped">Movimiento amortiguado</option>
-            <option value="forcedUndamped">
-              Movimiento forzado no amortiguado
-            </option>
-            <option value="forcedDamped">Movimiento forzado amortiguado</option>
-          </select>
-
+          {/* SELECTOR: Tipo de movimiento */}
+          {isCoupled ? "" : renderMotionTypeSelect()}
           {/* Dimensiones y constantes */}
-          <label className="form-label">Dimensiones</label>
+
+          <label className="form-label">DIMENSIONES</label>
           <form className="controls-form-inputs-form">
+            <FormInput
+              label="Masa de las esferas (Kg)"
+              value={dimensions.massSpheres}
+              disabled={true}
+            />
+            <FormInput
+              label="Masa de las barras (Kg)"
+              value={dimensions.massBar}
+              disabled={true}
+            />
+            <label className="form-label">Péndulo 1</label>
             <FormInput
               label="Longitud de la barra (m)"
               name="l"
@@ -214,16 +237,6 @@ export const ControlsForm = ({
               min={0}
             />
             <FormInput
-              label="Masa de las esferas (Kg)"
-              value={dimensions.massSpheres}
-              disabled={true}
-            />
-            <FormInput
-              label="Masa de la barra (Kg)"
-              value={dimensions.massBar}
-              disabled={true}
-            />
-            <FormInput
               label="Constante de torsión (k)"
               name="k"
               value={dimensions.k}
@@ -238,61 +251,51 @@ export const ControlsForm = ({
           </form>
 
           {/* Condiciones iniciales */}
-          <label className="form-label">Condiciones iniciales</label>
+          <label className="form-label">CONDICIONES INICIALES</label>
           <form className="controls-form-inputs-form">
+            {/* {renderDegRadSelect()} */}
             <FormInput
-              label="Posición inicial (Grados)"
-              value={initConditions.position * (180 / Math.PI)}
-              name="position"
-              onChange={(name, value) =>
-                handleInitConditionChange(name, value, true)
-              }
-              disabled={isAnimating}
-            />
-            <FormInput
-              label="Posición inicial (Rad)"
+              label="Posición inicial"
               value={initConditions.position}
               name="position"
-              onChange={handleInitConditionChange}
+              onChange={(name, value) => handleInitConditionChange(name, value)}
               disabled={isAnimating}
             />
+
             <FormInput
-              label="Velocidad inicial (Grados)"
-              value={initConditions.velocity * (180 / Math.PI)}
-              name="velocity"
-              onChange={(name, value) =>
-                handleInitConditionChange(name, value, true)
-              }
-              disabled={isAnimating}
-            />
-            <FormInput
-              label="Velocidad inicial (Rad)"
+              label="Velocidad inicial"
               value={initConditions.velocity}
               name="velocity"
-              onChange={handleInitConditionChange}
-              disabled={isAnimating}
+              onChange={(name, value) => handleInitConditionChange(name, value)}
+              disabled={isCoupled}
             />
 
             {/* Condiciones iniciales del segundo péndulo */}
             {isCoupled && (
               <>
+                <label htmlFor="">Péndulo 2</label>
                 <FormInput
-                  label="Posición inicial péndulo 2 (Grados)"
-                  value={initConditions.position2 * (180 / Math.PI)}
+                  label="Posición inicial"
+                  value={initConditions.position2}
                   name="position2"
                   onChange={(name, value) =>
-                    handleInitConditionChange(name, value, true, 2)
+                    handleInitConditionChange(name, value)
                   }
                   disabled={isAnimating}
                 />
+
                 <FormInput
-                  label="Velocidad inicial péndulo 2 (Rad)"
-                  value={initConditions.velocity2}
-                  name="velocity2"
-                  onChange={(name, value) =>
-                    handleInitConditionChange(name, value, false, 2)
+                  label="Velocidad inicial"
+                  value={
+                    inDegrees
+                      ? initConditions.velocity2 * (180 / Math.PI)
+                      : initConditions.velocity2
                   }
-                  disabled={isAnimating}
+                  name="velocity"
+                  onChange={(name, value) =>
+                    handleInitConditionChange(name, value)
+                  }
+                  disabled={true}
                 />
               </>
             )}
@@ -360,8 +363,8 @@ export const ControlsForm = ({
                   disabled={true}
                 />
                 <FormInput
-                  label="Amplitud"
-                  value={timeVariables.mplitude2}
+                  label="Amplitud 2"
+                  value={timeVariables.amplitude2}
                   disabled={true}
                 />
                 <FormInput

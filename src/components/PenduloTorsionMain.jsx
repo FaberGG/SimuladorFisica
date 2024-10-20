@@ -95,7 +95,6 @@ export default function PenduloTorsionMain({ isCoupled }) {
     }
   };
 
-  //ESTE SOLO FUNCIONA PARA UN SOLO PÉNDULO
   const updateInitConditions = (name, value) => {
     setInitConditions((prev) => ({
       ...prev,
@@ -106,6 +105,9 @@ export default function PenduloTorsionMain({ isCoupled }) {
       position: name == "position" ? parseFloat(value) || 0 : 0,
       velocity: name == "velocity" ? parseFloat(value) || 0 : 0,
       amplitude: variables.InitAmplitude,
+      position2: name == "position2" ? parseFloat(value) || 0 : 0,
+      velocity2: name == "velocity2" ? parseFloat(value) || 0 : 0,
+      amplitude2: variables.InitAmplitude2,
       energy: 0,
     });
   };
@@ -144,12 +146,24 @@ export default function PenduloTorsionMain({ isCoupled }) {
       gamma: 0,
       period: 0,
       frecuency: 0,
+      InitAmplitude2: 0,
+      inertia2: 0,
+      phi2: 0,
+      omega2: 0,
+      omegaD2: 0,
+      omegaF2: 0,
+      gamma2: 0,
+      period2: 0,
+      frecuency2: 0,
     });
     setTime(0);
     setTimeVariables({
       position: initConditions.position,
       velocity: initConditions.velocity,
       amplitude: variables.InitAmplitude,
+      position2: initConditions.position2,
+      velocity2: initConditions.velocity2,
+      amplitude2: variables.InitAmplitude2,
       energy: 0,
     });
   };
@@ -178,7 +192,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
         />
 
         <Canvas style={{ display: "flex", height: "100vh" }}>
-          {isCoupled ? (
+          {!isCoupled ? (
             <ScenePendulo
               dimensions={dimensions}
               variables={variables}
@@ -195,9 +209,25 @@ export default function PenduloTorsionMain({ isCoupled }) {
               ref={pendulumRef}
             />
           ) : (
-            <ScenePendulosAcoplados />
+            <ScenePendulosAcoplados
+              dimensions={dimensions}
+              variables={variables}
+              initConditions={initConditions}
+              setTimeVariables={setTimeVariables}
+              setTime={setTime}
+              position={{
+                position: timeVariables.position,
+                position2: timeVariables.position2,
+              }}
+              isAnimating={isAnimating}
+              reset={reset}
+              showGuides={showGuides}
+              ref={pendulumRef}
+            />
           )}
         </Canvas>
+
+        {/* GRAFICAS */}
       </div>
     </>
   );
