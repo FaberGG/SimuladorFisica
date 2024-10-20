@@ -11,17 +11,22 @@ function Sphere({ radius, xPosition, color }) {
   );
 }
 
-export default function BarWithSpheres({ length, radius, position }) {
+export default function BarWithSpheres({
+  length,
+  radius,
+  thetaPosition,
+  yposition,
+}) {
   const groupRef = useRef();
 
   // Uso de elapsedTime para controlar la rotación o el estado de la animación
   useFrame(() => {
-    groupRef.current.rotation.y = position; // Puedes usar elapsedTime aquí para ajustar la posición/rotación si es necesario
+    groupRef.current.rotation.y = thetaPosition; // Puedes usar elapsedTime aquí para ajustar la posición/rotación si es necesario
   });
 
   return (
     <>
-      <group ref={groupRef} position={[0, 0, 0]}>
+      <group ref={groupRef} position={[0, yposition, 0]}>
         {/* Barra */}
         <mesh>
           <boxGeometry

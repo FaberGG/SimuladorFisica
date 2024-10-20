@@ -84,7 +84,6 @@ export const calculatePosition = (time, initAmplitude, phi, omega, omegaF) => {
   }
 
   let delta = omegaF < omega ? 0 : Math.PI;
-  console.log(delta);
   // Primera parte: Movimiento natural
   const naturalPart = initAmplitude.A * Math.cos(omega * time + phi);
 
