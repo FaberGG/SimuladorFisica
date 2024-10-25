@@ -1,21 +1,21 @@
 import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
 import CardContainer from "./components/CardContainer";
-import { PenduloTorsionMain } from "./components/pendulo_torsion/PenduloTorsionMain";
-
+import PenduloTorsionMain from "./components/PenduloTorsionMain";
 function App() {
   return (
     <>
       <Routes>
         {/* se renderizan las rutas
         (segun la ruta en el url renderiza el compenente correspondiente) */}
+        <Route path="/" element={<CardContainer></CardContainer>}></Route>
         <Route
-          path="/SimuladorFisica"
-          element={<CardContainer></CardContainer>}
+          path="/pendulo-torsion"
+          element={<PenduloTorsionMain isCoupled={false} />}
         ></Route>
         <Route
-          path="/SimuladorFisica/pendulo-torsion"
-          element={<PenduloTorsionMain />}
+          path="/pendulos-acoplados"
+          element={<PenduloTorsionMain isCoupled={true} />}
         ></Route>
       </Routes>
     </>

@@ -1,3 +1,4 @@
+
 export const calculateVelocity = (time, amplitude, omega, phi) => {
     // Retorna la velocidad en función del tiempo.
   };
@@ -73,3 +74,4 @@ export function position2(time, B1, B2, omega, omega2, phi) {
       B2 * Math.cos(omega2 * time + phi)
     );
   }
+

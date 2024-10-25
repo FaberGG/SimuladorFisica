@@ -10,11 +10,13 @@ import BarWithSpheres from "../BarWithSpheres";
 import Protractor from "../Protractor";
 import * as THREE from "three";
 
+
 // Importamos todas las funciones del archivo de cálculos como un objeto
 import * as coupledCalculations from "./path/to/coupledCalculations";
 
 // También importamos calculateInertia del archivo globalCalculations
 import { calculateInertia } from "./globalCalculations";
+
 
 const ScenePendulo = forwardRef(
   (
@@ -40,6 +42,7 @@ const ScenePendulo = forwardRef(
     //LLAMADO A LOS CALCULOS PARA CADA VALOR DE TIEMPO (CUANDO ESTA EN EJECUCION)
     const setAllTimeVars = (time) => {
       setTime(time);
+
       
       // Funciones theta1 y theta2 en función de los parámetros
       let newPosition = coupledCalculations.position1(time, A1, A2, omega1, omega2, phi);
@@ -49,6 +52,7 @@ const ScenePendulo = forwardRef(
       let newVelocity2 = coupledCalculations.calculateVelocity(time, variables.InitAmplitude2, variables.omega2, variables.phi2);
       let newAmplitude2 = variables.InitAmplitude2;
       let newEnergy = coupledCalculations.calculateEnergy(newAmplitude, variables.omega, variables.inertia);
+
 
       setTimeVariables({
         position: newPosition,
@@ -97,6 +101,7 @@ const ScenePendulo = forwardRef(
 
         // Relaciones de amplitud para los modos normales
         amplitudeRelation: amplitudeRelation,
+
       };
     };
 
