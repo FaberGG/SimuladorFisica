@@ -255,7 +255,7 @@ export const ControlsForm = ({
           <form className="controls-form-inputs-form">
             {/* {renderDegRadSelect()} */}
             <FormInput
-              label="Posición inicial"
+              label="Posición inicial (rad)"
               value={initConditions.position}
               name="position"
               onChange={(name, value) => handleInitConditionChange(name, value)}
@@ -263,7 +263,7 @@ export const ControlsForm = ({
             />
 
             <FormInput
-              label="Velocidad inicial"
+              label="Velocidad inicial (rad/s)"
               value={initConditions.velocity}
               name="velocity"
               onChange={(name, value) => handleInitConditionChange(name, value)}
@@ -275,7 +275,7 @@ export const ControlsForm = ({
               <>
                 <label htmlFor="">Péndulo 2</label>
                 <FormInput
-                  label="Posición inicial"
+                  label="Posición inicial (rad)"
                   value={initConditions.position2}
                   name="position2"
                   onChange={(name, value) =>
@@ -285,7 +285,7 @@ export const ControlsForm = ({
                 />
 
                 <FormInput
-                  label="Velocidad inicial"
+                  label="Velocidad inicial (rad/s)"
                   value={
                     inDegrees
                       ? initConditions.velocity2 * (180 / Math.PI)
@@ -322,14 +322,14 @@ export const ControlsForm = ({
             <FormInput
               label={
                 motionType === "forcedUndamped" || motionType === "forcedDamped"
-                  ? "Potencia"
+                  ? "Potencia "
                   : "Energía (J)"
               }
               value={timeVariables.energy}
               disabled={true}
             />
             <FormInput
-              label="Amplitud"
+              label="Amplitud (θ)"
               value={timeVariables.amplitude}
               disabled={true}
             />
@@ -339,12 +339,12 @@ export const ControlsForm = ({
               disabled={true}
             />
             <FormInput
-              label="Periodo"
+              label="Periodo (T)"
               value={variables.period}
               disabled={true}
             />
             <FormInput
-              label="Frecuencia"
+              label="Frecuencia (f)"
               value={variables.frecuency}
               disabled={true}
             />
@@ -363,7 +363,7 @@ export const ControlsForm = ({
                   disabled={true}
                 />
                 <FormInput
-                  label="Amplitud 2"
+                  label="Amplitudes 2 "
                   value={timeVariables.amplitude2}
                   disabled={true}
                 />
@@ -373,7 +373,7 @@ export const ControlsForm = ({
                   disabled={true}
                 />
                 <FormInput
-                  label="Periodo Péndulo 2"
+                  label="Periodo (T) Péndulo 2"
                   value={variables.period2}
                   disabled={true}
                 />
