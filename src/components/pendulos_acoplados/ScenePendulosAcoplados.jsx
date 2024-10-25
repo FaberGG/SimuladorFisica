@@ -10,6 +10,14 @@ import BarWithSpheres from "../BarWithSpheres";
 import Protractor from "../Protractor";
 import * as THREE from "three";
 
+
+// Importamos todas las funciones del archivo de cálculos como un objeto
+import * as coupledCalculations from "./path/to/coupledCalculations";
+
+// También importamos calculateInertia del archivo globalCalculations
+import { calculateInertia } from "./globalCalculations";
+
+
 const ScenePendulo = forwardRef(
   (
     {
@@ -34,13 +42,17 @@ const ScenePendulo = forwardRef(
     //LLAMADO A LOS CALCULOS PARA CADA VALOR DE TIEMPO (CUANDO ESTA EN EJECUCION)
     const setAllTimeVars = (time) => {
       setTime(time);
-      let newPosition = 0;
-      let newVelocity = 0;
+
+      
+      // Funciones theta1 y theta2 en función de los parámetros
+      let newPosition = coupledCalculations.position1(time, A1, A2, omega1, omega2, phi);
+      let newPosition2 = coupledCalculations.position2(time, B1, B2, omega1, omega2, phi);
+      let newVelocity = coupledCalculations.calculateVelocity(time, variables.InitAmplitude, variables.omega, variables.phi);
       let newAmplitude = variables.InitAmplitude;
-      let newPosition2 = 0;
-      let newVelocity2 = 0;
+      let newVelocity2 = coupledCalculations.calculateVelocity(time, variables.InitAmplitude2, variables.omega2, variables.phi2);
       let newAmplitude2 = variables.InitAmplitude2;
-      let newEnergy = 0;
+      let newEnergy = coupledCalculations.calculateEnergy(newAmplitude, variables.omega, variables.inertia);
+
 
       setTimeVariables({
         position: newPosition,
@@ -56,27 +68,40 @@ const ScenePendulo = forwardRef(
     //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
     const setAllNoTimeVars = () => {
       //IMPLEMENTAR LOS CALCULOS PARA ACOPLADOS
+      
+      // Calculamos las frecuencias normales omega_1 y omega_2
+      let { omega1, omega2 } = coupledCalculations.calculateFrequencies(inertia1, 
+        inertia2, variables.K1, variables.K2, variables.Kc);
+
+      // Calculamos las relaciones de amplitud entre los modos normales
+      let amplitudeRelation = coupledCalculations.calculateAmplitudeRelation(inertia1, 
+        inertia2, variables.K1, variables.K2, variables.Kc, omega1, omega2);
+
       //(LAS VARIABLES QUE NO SE CALCULAN AUI SE DEJAN EN CERO)
       return {
-        InitAmplitude: 0,
-        inertia: 0,
-        phi: 0,
-        omega: 0,
+        InitAmplitude: variables.InitAmplitude,
+        inertia: calculateInertia(variables.mass, variables.length),
+        phi: coupledCalculations.calculatePhi(variables.InitAmplitude, 0),
+        omega: coupledCalculations.calculateOmega(variables.inertia, variables.length),
         omegaD: 0,
         gamma: 0,
-        period: 0,
+        period: coupledCalculations.calculatePeriod(variables.omega),
         frecuency: 0,
         delta: 0,
 
-        InitAmplitude2: 0,
-        inertia2: 0,
-        phi2: 0,
-        omega2: 0,
+        InitAmplitude2: variables.InitAmplitude2,
+        inertia2: calculateInertia(variables.mass2, variables.length2),
+        phi2: coupledCalculations.calculatePhi(variables.InitAmplitude2, 0),
+        omega2: coupledCalculations.calculateOmega(variables.inertia2, variables.length2),
         omegaD2: 0,
         gamma2: 0,
-        period2: 0,
+        period2: coupledCalculations.calculatePeriod(variables.omega2),
         frecuency2: 0,
         delta2: 0,
+
+        // Relaciones de amplitud para los modos normales
+        amplitudeRelation: amplitudeRelation,
+
       };
     };
 
