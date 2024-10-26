@@ -16,12 +16,6 @@ export default function CardContainer() {
           url="pendulo-torsion"
           imageUrl={imgPenduloTorsion}
         />
-        <Card
-          title="Pendulos de torsion acoplados"
-          copy="Sistema físico que oscila rotacionalmente alrededor de un eje fijo debido a un torque restaurador"
-          url="pendulos-acoplados"
-          imageUrl={"imgSisAcoplados"}
-        />
       </div>
     </div>
   );

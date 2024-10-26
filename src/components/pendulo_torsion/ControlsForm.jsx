@@ -71,7 +71,7 @@ export const ControlsForm = ({
     return (
       <>
         <FormInput
-          label="Amplitud Fuerza Externa (to)"
+          label="Amplitud Fuerza Externa (to) (rad)"
           name="Fo"
           value={dimensions.Fo}
           onChange={dimensionsinputChange}
@@ -79,7 +79,7 @@ export const ControlsForm = ({
           min={0}
         />
         <FormInput
-          label="Frecuencia Fuerza Externa (wf)"
+          label="Frecuencia Fuerza Externa (wf) (hz)"
           name="omegaF"
           value={dimensions.omegaF}
           onChange={dimensionsinputChange}
@@ -114,7 +114,7 @@ export const ControlsForm = ({
           onlyLabel={true}
         />
         <FormInput
-          label="Constante de amortiguamiento (b)"
+          label="Constante de amortiguamiento (b) (N·s/m)"
           name="b"
           value={dimensions.b}
           onChange={dimensionsinputChange}
@@ -206,7 +206,7 @@ export const ControlsForm = ({
           </label>
           <form action="" className="controls-form-inputs-form">
             <FormInput
-              label="Constante de torsión (k)"
+              label="Constante de torsión (k)  (N·m)"
               name="k"
               value={dimensions.k}
               onChange={dimensionsinputChange}
@@ -265,10 +265,6 @@ export const ControlsForm = ({
               disabled={isAnimating}
             />
           </form>
-          <label className="controls-form-inputs-label">
-            Ecuacion de movimiento
-          </label>
-          <EcuationLabel ecuation={findEcuationMotion()} />
 
           {/* variables del sistema */}
           <label className="controls-form-inputs-label">
@@ -306,19 +302,23 @@ export const ControlsForm = ({
             />
 
             <FormInput
-              label="Amplitud Inicial"
+              label="Amplitud Inicial (rad)"
               name="initAmplitude"
               value={variables.InitAmplitude}
               disabled={true}
             />
             <FormInput
-              label="Amplitud"
+              label="Amplitud (rad)"
               name="amplitude"
               value={amplitude}
               disabled={true}
             />
             {(() => {
-              if (motionType == "forcedDamped" || motionType == "damped")
+              if (
+                motionType == "forcedDamped" ||
+                motionType == "damped" ||
+                motionType == "forcedUndamped"
+              )
                 return (
                   <>
                     <FormInput

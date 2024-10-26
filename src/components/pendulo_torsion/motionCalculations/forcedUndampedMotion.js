@@ -73,6 +73,10 @@ export const calculateForcedInitAmplitude = (
   return { A: A, C: C };
 };
 
+export const calculateDelta = (omega, omegaF) => {
+  return omegaF < omega ? 0 : Math.PI;
+};
+
 // SECCION FUNCIONES DE TIEMPO
 // Función para calcular la posición angular theta en función del tiempo
 export const calculatePosition = (time, initAmplitude, phi, omega, omegaF) => {
@@ -84,7 +88,6 @@ export const calculatePosition = (time, initAmplitude, phi, omega, omegaF) => {
   }
 
   let delta = omegaF < omega ? 0 : Math.PI;
-  console.log(delta);
   // Primera parte: Movimiento natural
   const naturalPart = initAmplitude.A * Math.cos(omega * time + phi);
 

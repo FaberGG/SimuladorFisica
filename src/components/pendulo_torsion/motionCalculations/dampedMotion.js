@@ -87,12 +87,14 @@ export const calculatePhi = (initPosition, initVelocity, omegaD, gamma) => {
   }
   // Caso cuando la velocidad inicial es 0
   if (initVelocity == 0) {
-    phi = Math.atan(-gamma / omegaD);
+    phi = Math.abs(Math.atan(-gamma / omegaD));
     return initPosition > 0 ? changeQuadrant(phi, 4) : changeQuadrant(phi, 2);
   }
 
   //calculo la arco-tangente
-  phi = Math.abs(Math.atan(-gamma / omegaD - initVelocity / (omegaD * initPosition)));
+  phi = Math.abs(
+    Math.atan(-gamma / omegaD - initVelocity / (omegaD * initPosition))
+  );
 
   //calculo el valor de la restriccion
   if (initPosition > 0) {

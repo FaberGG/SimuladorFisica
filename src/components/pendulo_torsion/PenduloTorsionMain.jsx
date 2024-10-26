@@ -297,6 +297,10 @@ export const PenduloTorsionMain = () => {
           newOmega,
           dimensions.omegaF
         );
+        newDelta = motionCalculations.calculateDelta(
+          newOmega,
+          dimensions.omegaF
+        );
         //Revisa si existe resonancia
         newPhi = motionCalculations.calculatePhiForUnd(
           initConditions.position,
@@ -323,6 +327,7 @@ export const PenduloTorsionMain = () => {
         break;
       case "forcedDamped": //caso forzado amortiguado
         newGamma = motionCalculations.calculateGamma(dimensions.b, newInertia);
+
         const typeforcedDamped = motionCalculations.checkDampedType(
           newOmega,
           newGamma
