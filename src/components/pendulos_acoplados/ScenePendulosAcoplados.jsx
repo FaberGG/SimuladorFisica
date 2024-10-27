@@ -10,13 +10,11 @@ import BarWithSpheres from "../BarWithSpheres";
 import Protractor from "../Protractor";
 import * as THREE from "three";
 
-
 // Importamos todas las funciones del archivo de cálculos como un objeto
-import * as coupledCalculations from "./path/to/coupledCalculations";
+import * as coupledCalculations from "./coupled_calculations/coupledCalculations";
 
 // También importamos calculateInertia del archivo globalCalculations
-import { calculateInertia } from "./globalCalculations";
-
+import { calculateInertia } from "../pendulo_torsion/motionCalculations/globalCalculations";
 
 const ScenePendulo = forwardRef(
   (
@@ -43,56 +41,89 @@ const ScenePendulo = forwardRef(
     const setAllTimeVars = (time) => {
       setTime(time);
 
-      
       // Funciones theta1 y theta2 en función de los parámetros
-      let newPosition = coupledCalculations.position1(time, A1, A2, omega1, omega2, phi);
-      let newPosition2 = coupledCalculations.position2(time, B1, B2, omega1, omega2, phi);
-      let newVelocity = coupledCalculations.calculateVelocity(time, variables.InitAmplitude, variables.omega, variables.phi);
-      let newAmplitude = variables.InitAmplitude;
-      let newVelocity2 = coupledCalculations.calculateVelocity(time, variables.InitAmplitude2, variables.omega2, variables.phi2);
-      let newAmplitude2 = variables.InitAmplitude2;
-      let newEnergy = coupledCalculations.calculateEnergy(newAmplitude, variables.omega, variables.inertia);
+      let newPosition = coupledCalculations.position1(
+        time,
+        variables.InitAmplitude.A1,
+        variables.InitAmplitude.A2,
+        variables.omega,
+        variables.omega2,
+        variables.phi
+      );
+      let newPosition2 = coupledCalculations.position2(
+        time,
+        variables.InitAmplitude2.B1,
+        variables.InitAmplitude2.B2,
+        variables.omega,
+        variables.omega2,
+        variables.phi
+      );
 
+      let newAmplitude = variables.InitAmplitude;
+
+      let newAmplitude2 = variables.InitAmplitude2;
 
       setTimeVariables({
         position: newPosition,
-        velocity: newVelocity,
+        velocity: 0,
         amplitude: newAmplitude,
         position2: newPosition2,
-        velocity2: newVelocity2,
+        velocity2: 0,
         amplitude2: newAmplitude2,
-        energy: newEnergy,
+        energy: 0,
       });
     };
 
     //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
     const setAllNoTimeVars = () => {
       //IMPLEMENTAR LOS CALCULOS PARA ACOPLADOS
-      
+      let inertia1 = calculateInertia(variables.mass, variables.length);
+      let inertia2 = calculateInertia(variables.mass2, variables.length2);
+
+      let amplitude1;
+      let amplitude2;
       // Calculamos las frecuencias normales omega_1 y omega_2
-      let { omega1, omega2 } = coupledCalculations.calculateFrequencies(inertia1, 
-        inertia2, variables.K1, variables.K2, variables.Kc);
+      let { omega1, omega2 } = coupledCalculations.calculateFrequencies(
+        inertia1,
+        inertia2,
+        dimensions.K1,
+        dimensions.K2,
+        dimensions.Kc
+      );
 
       // Calculamos las relaciones de amplitud entre los modos normales
-      let amplitudeRelation = coupledCalculations.calculateAmplitudeRelation(inertia1, 
-        inertia2, variables.K1, variables.K2, variables.Kc, omega1, omega2);
+      let amplitudeRelation = coupledCalculations.calculateAmplitudeRelation(
+        inertia1,
+        inertia2,
+        dimensions.K1,
+        dimensions.K2,
+        dimensions.Kc,
+        omega1,
+        omega2
+      );
 
       //(LAS VARIABLES QUE NO SE CALCULAN AUI SE DEJAN EN CERO)
       return {
-        InitAmplitude: variables.InitAmplitude,
-        inertia: calculateInertia(variables.mass, variables.length),
+        InitAmplitude: amplitude1,
+        inertia: inertia1,
         phi: coupledCalculations.calculatePhi(variables.InitAmplitude, 0),
-        omega: coupledCalculations.calculateOmega(variables.inertia, variables.length),
+        omega: coupledCalculations.calculateOmega(
+          variables.inertia,
+          variables.length
+        ),
         omegaD: 0,
         gamma: 0,
         period: coupledCalculations.calculatePeriod(variables.omega),
         frecuency: 0,
         delta: 0,
 
-        InitAmplitude2: variables.InitAmplitude2,
-        inertia2: calculateInertia(variables.mass2, variables.length2),
+        InitAmplitude2: amplitude2,
+        inertia2: inertia2,
         phi2: coupledCalculations.calculatePhi(variables.InitAmplitude2, 0),
-        omega2: coupledCalculations.calculateOmega(variables.inertia2, variables.length2),
+        omega2: coupledCalculations.calculateOmega(
+          variables.inertia2,
+          variables.length2
+        ),
         omegaD2: 0,
         gamma2: 0,
         period2: coupledCalculations.calculatePeriod(variables.omega2),
@@ -101,7 +132,6 @@ const ScenePendulo = forwardRef(
 
         // Relaciones de amplitud para los modos normales
         amplitudeRelation: amplitudeRelation,
-
       };
     };
 
