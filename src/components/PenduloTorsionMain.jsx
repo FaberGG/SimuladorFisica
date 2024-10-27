@@ -2,10 +2,11 @@ import React from "react";
 import { useState, useRef } from "react";
 import ScenePendulo from "./pendulo_torsion/ScenePendulo";
 import ScenePendulosAcoplados from "./pendulos_acoplados/ScenePendulosAcoplados";
+import PositionTimeGraph from "./PositionTimeGraph";
 import { Canvas } from "@react-three/fiber";
 
 import { ControlsForm } from "./ControlsForm";
-
+import { roundDecimal } from "./pendulo_torsion/motionCalculations/globalCalculations";
 export default function PenduloTorsionMain({ isCoupled }) {
   //estado para el tipo de movimiento seleccionado (simple, damped, forcedUndamped, forcedDamped)
   const [motionType, setMotionType] = useState("simple");
@@ -86,6 +87,10 @@ export default function PenduloTorsionMain({ isCoupled }) {
   //se actualiza para mostrar guias (el transportador)
   const [showGuides, setShowGuides] = useState(true);
 
+  //estados para la graficas
+  const [positionData, setPositionData] = useState([]);
+  const [position2Data, setPosition2Data] = useState([]);
+
   //FUNCION PARA LLAMAR A LOS CALCULOS EN LA ESCENA
   const pendulumRef = useRef();
   const handleCallSetNoTimeVars = () => {
@@ -95,6 +100,18 @@ export default function PenduloTorsionMain({ isCoupled }) {
     }
   };
 
+  //FUNCION LLAMADA DESDE LA ESCENA PARA LLENAR EL ARREGLO DE DATOS PARA LA GRAFICA
+  const updateDataGraph = () => {
+    const t = roundDecimal(time, 2);
+    let position = roundDecimal(timeVariables.position, 2);
+
+    setPositionData([...positionData, { t, position }]);
+    if (isCoupled) {
+      position = roundDecimal(timeVariables.position2, 2);
+      setPosition2Data([...position2Data, { t, position }]);
+    }
+  };
+  //se llama cuando se cambian las condiciones iniciales en el formulario
   const updateInitConditions = (name, value) => {
     setInitConditions((prev) => ({
       ...prev,
@@ -166,6 +183,8 @@ export default function PenduloTorsionMain({ isCoupled }) {
       amplitude2: variables.InitAmplitude2,
       energy: 0,
     });
+    setPositionData([]);
+    setPosition2Data([]);
   };
 
   return (
@@ -203,6 +222,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
               setTimeVariables={setTimeVariables}
               setTime={setTime}
               position={timeVariables.position}
+              updateDataGraph={updateDataGraph}
               isAnimating={isAnimating}
               reset={reset}
               showGuides={showGuides}
@@ -219,6 +239,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
                 position: timeVariables.position,
                 position2: timeVariables.position2,
               }}
+              updateDataGraph={updateDataGraph}
               isAnimating={isAnimating}
               reset={reset}
               showGuides={showGuides}
@@ -228,6 +249,18 @@ export default function PenduloTorsionMain({ isCoupled }) {
         </Canvas>
 
         {/* GRAFICAS */}
+        <div className="graph-container">
+          <PositionTimeGraph
+            positionData={positionData}
+            title={"Péndulo 1: Posición vs Tiempo"}
+          />
+          {isCoupled && (
+            <PositionTimeGraph
+              positionData={position2Data}
+              title={"Péndulo 2: Posición vs Tiempo"}
+            />
+          )}
+        </div>
       </div>
     </>
   );

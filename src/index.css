@@ -22,6 +22,12 @@ div#root {
   }
   display: flex;
 }
+.graph-container {
+  display: flex;
+  flex-direction: column;
+  width: 40%; /* Adjust width as needed */
+  padding: 3%;
+}
 
 /* fondo de estrellas */
 .stars,

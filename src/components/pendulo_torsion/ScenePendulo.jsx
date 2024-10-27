@@ -25,6 +25,7 @@ const ScenePendulo = forwardRef(
       setTimeVariables,
       setTime,
       position,
+      updateDataGraph,
       isAnimating,
       reset,
       showGuides,
@@ -357,6 +358,7 @@ const ScenePendulo = forwardRef(
           const currentElapsedTime = clockRef.current.getElapsedTime();
           const totalElapsedTime = elapsedTime + currentElapsedTime; // Tiempo total transcurrido
           setAllTimeVars(totalElapsedTime);
+          updateDataGraph();
         }, 16); // Aproximadamente 60 FPS
 
         return () => clearInterval(interval);

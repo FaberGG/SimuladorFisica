@@ -25,6 +25,7 @@ const ScenePendulo = forwardRef(
       setTimeVariables,
       setTime,
       position,
+      updateDataGraph,
       isAnimating,
       reset,
       showGuides,
@@ -77,35 +78,23 @@ const ScenePendulo = forwardRef(
     //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
     const setAllNoTimeVars = () => {
       //IMPLEMENTAR LOS CALCULOS PARA ACOPLADOS
-      let inertia1 = calculateInertia(variables.mass, variables.length);
-      let inertia2 = calculateInertia(variables.mass2, variables.length2);
+      let newInertia = calculateInertia(variables.mass, variables.length);
+      let newInertia2 = calculateInertia(variables.mass2, variables.length2);
 
-      let amplitude1;
-      let amplitude2;
+      let newInitAmplitude;
+      let newInitAmplitude2;
       // Calculamos las frecuencias normales omega_1 y omega_2
-      let { omega1, omega2 } = coupledCalculations.calculateFrequencies(
-        inertia1,
-        inertia2,
-        dimensions.K1,
-        dimensions.K2,
-        dimensions.Kc
-      );
-
-      // Calculamos las relaciones de amplitud entre los modos normales
-      let amplitudeRelation = coupledCalculations.calculateAmplitudeRelation(
-        inertia1,
-        inertia2,
-        dimensions.K1,
-        dimensions.K2,
-        dimensions.Kc,
-        omega1,
-        omega2
+      let { newOmega, newOmega2 } = coupledCalculations.calculateFrequencies(
+        newInertia,
+        newInertia2,
+        dimensions.K,
+        dimensions.K2
       );
 
       //(LAS VARIABLES QUE NO SE CALCULAN AUI SE DEJAN EN CERO)
       return {
-        InitAmplitude: amplitude1,
-        inertia: inertia1,
+        InitAmplitude: newInitAmplitude,
+        inertia: newInertia,
         phi: coupledCalculations.calculatePhi(variables.InitAmplitude, 0),
         omega: coupledCalculations.calculateOmega(
           variables.inertia,
@@ -117,8 +106,8 @@ const ScenePendulo = forwardRef(
         frecuency: 0,
         delta: 0,
 
-        InitAmplitude2: amplitude2,
-        inertia2: inertia2,
+        InitAmplitude2: newInitAmplitude2,
+        inertia2: newInertia2,
         phi2: coupledCalculations.calculatePhi(variables.InitAmplitude2, 0),
         omega2: coupledCalculations.calculateOmega(
           variables.inertia2,
@@ -129,9 +118,6 @@ const ScenePendulo = forwardRef(
         period2: coupledCalculations.calculatePeriod(variables.omega2),
         frecuency2: 0,
         delta2: 0,
-
-        // Relaciones de amplitud para los modos normales
-        amplitudeRelation: amplitudeRelation,
       };
     };
 
@@ -166,6 +152,7 @@ const ScenePendulo = forwardRef(
           const currentElapsedTime = clockRef.current.getElapsedTime();
           const totalElapsedTime = elapsedTime + currentElapsedTime; // Tiempo total transcurrido
           setAllTimeVars(totalElapsedTime);
+          updateDataGraph();
         }, 16); // Aproximadamente 60 FPS
 
         return () => clearInterval(interval);
