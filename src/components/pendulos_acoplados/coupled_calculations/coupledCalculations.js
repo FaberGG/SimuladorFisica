@@ -56,6 +56,9 @@ function calculateAmplitudeRelation(inertia, inertia2, K1, K2, omega, omega2) {
   };
 }
 
+export const calculateAmplitude = (initPosition, initPosition2) => {};
+export const calculateAmplitude2 = (initPosition, initPosition2) => {};
+
 // Función para calcular θ1(t)
 export function position1(time, A1, A2, omega, omega2, phi) {
   return A1 * Math.cos(omega * time + phi) + A2 * Math.cos(omega2 * time + phi);
@@ -65,3 +68,13 @@ export function position1(time, A1, A2, omega, omega2, phi) {
 export function position2(time, B1, B2, omega, omega2, phi) {
   return B1 * Math.cos(omega * time + phi) + B2 * Math.cos(omega2 * time + phi);
 }
+
+//Calcular la ecuacion de movimiento a mostrar (en string)
+const calculateStrEcuation = (time, omega1, omega2, A, B, phi) => {
+  //Para acoplado, phi = 0
+  //A, B puede ser A1 A2 cuando es el pendulo 1
+  //A, B puede ser B1 B2 cuando es el pendulo 2
+  // (las variables correspondientes se pasan en los parametros)
+
+  return strEcuation;
+};

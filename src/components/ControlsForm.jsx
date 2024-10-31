@@ -302,9 +302,18 @@ export const ControlsForm = ({
           </form>
 
           {/* Ecuación de movimiento */}
-          <label className="form-label">Ecuación de movimiento</label>
+          <label className="form-label">
+            Ecuación de movimiento {isCoupled ? "(Péndulo 1)" : ""}
+          </label>
           <EcuationLabel ecuation={strEcuation[0]} />
-
+          {isCoupled && (
+            <>
+              <label className="form-label">
+                Ecuación de movimiento (Péndulo 2)
+              </label>
+              <EcuationLabel ecuation={strEcuation[1]} />
+            </>
+          )}
           {/* Variables del sistema */}
           <label className="form-label">Variables del sistema</label>
           <form className="controls-form-inputs-form">

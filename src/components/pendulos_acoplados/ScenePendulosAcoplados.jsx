@@ -24,6 +24,7 @@ const ScenePendulo = forwardRef(
       initConditions,
       setTimeVariables,
       setTime,
+      setStrEcuation,
       position,
       updateDataGraph,
       isAnimating,
@@ -77,47 +78,46 @@ const ScenePendulo = forwardRef(
 
     //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
     const setAllNoTimeVars = () => {
-      //IMPLEMENTAR LOS CALCULOS PARA ACOPLADOS
-      let newInertia = calculateInertia(variables.mass, variables.length);
-      let newInertia2 = calculateInertia(variables.mass2, variables.length2);
+      //Variables a calcular
+      let omegas = { omega1: 0, omega2: 0 };
 
-      let newInitAmplitude;
-      let newInitAmplitude2;
+      //IMPLEMENTAR LOS CALCULOS PARA ACOPLADOS
+      let newInertia = calculateInertia(variables.r, variables.l);
+      let newInertia2 = calculateInertia(variables.r2, variables.l2);
+
       // Calculamos las frecuencias normales omega_1 y omega_2
-      let { newOmega, newOmega2 } = coupledCalculations.calculateFrequencies(
+      omegas = coupledCalculations.calculateFrequencies(
         newInertia,
         newInertia2,
         dimensions.K,
         dimensions.K2
       );
+      let newInitAmplitude; //A1 A2
+      let newInitAmplitude2; //B1 B2
 
+      let strEcuation = "";
+      let strEcuation2 = "";
       //(LAS VARIABLES QUE NO SE CALCULAN AUI SE DEJAN EN CERO)
       return {
         InitAmplitude: newInitAmplitude,
         inertia: newInertia,
-        phi: coupledCalculations.calculatePhi(variables.InitAmplitude, 0),
-        omega: coupledCalculations.calculateOmega(
-          variables.inertia,
-          variables.length
-        ),
-        omegaD: 0,
-        gamma: 0,
+        phi: 0,
+        omega: omegas.omega1,
+        omegaD: 0, //no se calcula
+        gamma: 0, //no se calcula
         period: coupledCalculations.calculatePeriod(variables.omega),
         frecuency: 0,
-        delta: 0,
+        delta: 0, //no se calcula
 
         InitAmplitude2: newInitAmplitude2,
         inertia2: newInertia2,
-        phi2: coupledCalculations.calculatePhi(variables.InitAmplitude2, 0),
-        omega2: coupledCalculations.calculateOmega(
-          variables.inertia2,
-          variables.length2
-        ),
-        omegaD2: 0,
-        gamma2: 0,
+        phi2: 0,
+        omega2: omegas.omega2,
+        omegaD2: 0, //no se calcula
+        gamma2: 0, //no se calcula
         period2: coupledCalculations.calculatePeriod(variables.omega2),
         frecuency2: 0,
-        delta2: 0,
+        delta2: 0, //no se calcula
       };
     };
 
@@ -190,6 +190,7 @@ const ScenePendulo = forwardRef(
           <meshStandardMaterial color="white" metalness={0.7} roughness={0.3} />
         </mesh>
 
+        {/* Pendulo superior (pendulo1) */}
         <BarWithSpheres
           length={dimensions.l}
           radius={dimensions.r}
@@ -198,6 +199,7 @@ const ScenePendulo = forwardRef(
           showGuides={showGuides}
         ></BarWithSpheres>
 
+        {/* pendulo inferior (pendulo 2) */}
         <BarWithSpheres
           length={dimensions.l2}
           radius={dimensions.r2}

@@ -15,7 +15,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
 
   //estado para actualizar el string de ecuacion a mostrar
   const [strEcuation, setstrEcuation] = useState([
-    "θ(t) = C cos(ω₀ t + ϕ)",
+    "θ(t) = C cos(ω₀ t + ϕ) + C cos(ω₀ t + ϕ)",
     "θ(t) = C cos(ω₀ t + ϕ)",
   ]);
 
@@ -47,7 +47,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
 
   //variables que solo se calculan una vez al establecer condiciones iniciales
   const [variables, setVariables] = useState({
-    InitAmplitude: 0,
+    InitAmplitude: 0, //A1 A2
     inertia: 0,
     phi: 0,
     omega: 0,
@@ -57,7 +57,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
     frecuency: 0,
     delta: 0,
 
-    InitAmplitude2: 0,
+    InitAmplitude2: 0, //B1 B2
     inertia2: 0,
     phi2: 0,
     omega2: 0,
@@ -235,6 +235,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
               initConditions={initConditions}
               setTimeVariables={setTimeVariables}
               setTime={setTime}
+              setstrEcuation={setstrEcuation}
               position={{
                 position: timeVariables.position,
                 position2: timeVariables.position2,
