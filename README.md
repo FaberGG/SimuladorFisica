@@ -63,14 +63,18 @@ Esto abrirá la aplicación en `http://localhost:3000` (o el puerto que se indiq
     ```bash
     git checkout -b nombre-de-la-rama
     ```
+3. Realiza tus cambios y agregalos antes de hacer el commit:
     
+    ```bash
+    git add ."
+    ```    
 3. Realiza tus cambios y haz un commit:
     
     ```bash
     git commit -m "Descripción de los cambios"
     ```
     
-4. Sube tus cambios a tu fork:
+4. Sube tus cambios a tu rama:
     
     ```bash
     git push origin nombre-de-la-rama
