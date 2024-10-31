@@ -66,7 +66,7 @@ Esto abrirá la aplicación en `http://localhost:3000` (o el puerto que se indiq
 3. Realiza tus cambios y agregalos antes de hacer el commit:
     
     ```bash
-    git add ."
+    git add .
     ```    
 3. Realiza tus cambios y haz un commit:
     
