@@ -18,7 +18,7 @@ export default function CardContainer() {
         />
         <Card
           title="Pendulos de torsion acoplados"
-          copy="Sistema físico que oscila rotacionalmente alrededor de un eje fijo debido a un torque restaurador"
+          copy="Sistema con dos péndulos de torsión acoplados mediante un k2"
           url="pendulos-acoplados"
           imageUrl={imgPendulosAcoplados}
         />
