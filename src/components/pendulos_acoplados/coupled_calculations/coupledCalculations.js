@@ -1,63 +1,63 @@
-export const calculateVelocity = (time, amplitude, omega, phi) => {
-  // Retorna la velocidad en función del tiempo.
-};
-
-export const calculateOmega = (inertia, length) => {
-  // Calcula la frecuencia natural (omega) del sistema acoplado.
-};
-
-export const calculatePhi = (amplitude, position) => {
-  // Calcula el ángulo de fase (phi) inicial.
-};
-
 export const calculatePeriod = (omega) => {
   // Calcula el periodo del movimiento.
 };
 
-export const calculateEnergy = (amplitude, omega, inertia) => {
-  // Calcula la energía total del sistema.
+export const checkVibrationMode = () => {
+  //devuelve 1 para el primer modo
+  //devuelve 2 para el segundo modo
+  //devuelve 0 para ninguno
+  return 1;
 };
 
 // Función para resolver la ecuación cuadrática y calcular las frecuencias normales omega_1 y omega_2
-export function calculateFrequencies(inertia, inertia2, K1, K2, Kc) {
-  let A = inertia * inertia2;
-  let B = -((K1 + Kc) * inertia2 + (K2 + Kc) * inertia);
-  let C = (K1 + Kc) * (K2 + Kc) - Kc * Kc;
-
-  let discriminant = B * B - 4 * A * C;
-  if (discriminant < 0) {
-    return null;
-  }
-
-  let sqrtDiscriminant = Math.sqrt(discriminant);
-
-  // Frecuencias normales (omega_1 y omega_2)
-  let omega_squared = (-B - sqrtDiscriminant) / (2 * A);
-  let omega2_squared = (-B + sqrtDiscriminant) / (2 * A);
-
-  let omega = Math.sqrt(omega_squared);
-  let omega2 = Math.sqrt(omega2_squared);
+export function calculateOmegas(inertia, inertia2, K1, K2) {
+  let omega = Math.sqrt(
+    (2 * inertia2 * K1 +
+      inertia * K2 +
+      Math.sqrt(
+        4 * Math.pow(inertia2, 2) * Math.pow(K1, 2) +
+          Math.pow(inertia, 2) * Math.pow(K2, 2)
+      )) /
+      (2 * inertia * inertia2)
+  );
+  let omega2 = Math.sqrt(
+    (2 * inertia2 * K1 +
+      inertia * K2 -
+      Math.sqrt(
+        4 * Math.pow(inertia2, 2) * Math.pow(K1, 2) +
+          Math.pow(inertia, 2) * Math.pow(K2, 2)
+      )) /
+      (2 * inertia * inertia2)
+  );
 
   return { omega, omega2 };
 }
 
 // Exportamos la función para calcular las relaciones entre amplitudes A1/B1 y A2/B2
-function calculateAmplitudeRelation(inertia, inertia2, K1, K2, omega, omega2) {
+export const calculateAmplitudeRelation = (k, omega, omega2) => {
   // Relación de amplitud para el primer modo normal: A1 / B1
-  const A1_B1 = 0;
+  const A1_B1 = k / (2 * k - Math.pow(omega, 2));
 
   // Relación de amplitud para el segundo modo normal: A2 / B2
-  const A2_B2 = 0;
+  const A2_B2 = k / (2 * k - Math.pow(omega2, 2));
 
   // Devolvemos un objeto con las relaciones de amplitud
   return {
     A1_B1: A1_B1,
     A2_B2: A2_B2,
   };
-}
+};
 
-export const calculateAmplitude = (initPosition, initPosition2) => {};
-export const calculateAmplitude2 = (initPosition, initPosition2) => {};
+export const calculateAmplitude = (initPosition, initPosition2, M, N) => {
+  let A1, A2;
+
+  return { A1: A1, A2: A2 };
+};
+export const calculateAmplitude2 = (initPosition, initPosition2, M, N) => {
+  let B1, B2;
+
+  return { B1: B1, B2: B2 };
+};
 
 // Función para calcular θ1(t)
 export function position1(time, A1, A2, omega, omega2, phi) {
@@ -70,7 +70,7 @@ export function position2(time, B1, B2, omega, omega2, phi) {
 }
 
 //Calcular la ecuacion de movimiento a mostrar (en string)
-const calculateStrEcuation = (time, omega1, omega2, A, B, phi) => {
+export const calculateStrEcuation = (time, omega1, omega2, A, B, phi) => {
   //Para acoplado, phi = 0
   //A, B puede ser A1 A2 cuando es el pendulo 1
   //A, B puede ser B1 B2 cuando es el pendulo 2

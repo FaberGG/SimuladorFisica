@@ -12,6 +12,8 @@ export default function PenduloTorsionMain({ isCoupled }) {
   const [motionType, setMotionType] = useState("simple");
   //estado auxiliar para el tipo de amortiguamiento si aplica
   const [dampedType, setDampedType] = useState("NONE");
+  //estado para saber el modo de vibracion en caso de ser acoplado
+  const [vibrationMode, setVibrationMode] = useState(0);
 
   //estado para actualizar el string de ecuacion a mostrar
   const [strEcuation, setstrEcuation] = useState([
@@ -235,6 +237,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
               initConditions={initConditions}
               setTimeVariables={setTimeVariables}
               setTime={setTime}
+              setVibrationMode={setVibrationMode}
               setstrEcuation={setstrEcuation}
               position={{
                 position: timeVariables.position,
