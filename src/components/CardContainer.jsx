@@ -4,7 +4,7 @@ import Card from "./Card";
 
 //imagenes usadas
 import imgPenduloTorsion from "./assets/pendulo-torsion.png";
-
+import imgPendulosAcoplados from "./assets/pendulos-acoplados.png";
 export default function CardContainer() {
   return (
     <div className="card-container">
@@ -20,7 +20,7 @@ export default function CardContainer() {
           title="Pendulos de torsion acoplados"
           copy="Sistema físico que oscila rotacionalmente alrededor de un eje fijo debido a un torque restaurador"
           url="pendulos-acoplados"
-          imageUrl={"imgSisAcoplados"}
+          imageUrl={imgPendulosAcoplados}
         />
       </div>
     </div>

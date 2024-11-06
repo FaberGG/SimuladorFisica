@@ -25,6 +25,7 @@ const ScenePendulo = forwardRef(
       setTimeVariables,
       setTime,
       setStrEcuation,
+      setVibrationMode,
       position,
       updateDataGraph,
       isAnimating,
@@ -44,7 +45,7 @@ const ScenePendulo = forwardRef(
       setTime(time);
 
       // Funciones theta1 y theta2 en función de los parámetros
-      let newPosition = coupledCalculations.position1(
+      const newPosition = coupledCalculations.position1(
         time,
         variables.InitAmplitude.A1,
         variables.InitAmplitude.A2,
@@ -52,7 +53,7 @@ const ScenePendulo = forwardRef(
         variables.omega2,
         variables.phi
       );
-      let newPosition2 = coupledCalculations.position2(
+      const newPosition2 = coupledCalculations.position2(
         time,
         variables.InitAmplitude2.B1,
         variables.InitAmplitude2.B2,
@@ -61,9 +62,27 @@ const ScenePendulo = forwardRef(
         variables.phi
       );
 
-      let newAmplitude = variables.InitAmplitude;
+      //esta funcion deberia devolver una cadena con la ecuacion para mostrar
+      const strEcuation = coupledCalculations.calculateStrEcuation(
+        variables.InitAmplitude.A1,
+        variables.InitAmplitude.A2,
+        variables.omega,
+        variables.omega2,
+        variables.phi
+      );
+      //esta funcion deberia devolver una cadena con la ecuacion para mostrar
+      const strEcuation2 = coupledCalculations.calculateStrEcuation(
+        time,
+        variables.InitAmplitude2.B1,
+        variables.InitAmplitude2.B2,
+        variables.omega,
+        variables.omega2,
+        variables.phi
+      );
 
-      let newAmplitude2 = variables.InitAmplitude2;
+      const newAmplitude = variables.InitAmplitude;
+
+      const newAmplitude2 = variables.InitAmplitude2;
 
       setTimeVariables({
         position: newPosition,
@@ -74,29 +93,45 @@ const ScenePendulo = forwardRef(
         amplitude2: newAmplitude2,
         energy: 0,
       });
+      setStrEcuation([strEcuation, strEcuation2]);
     };
 
     //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
     const setAllNoTimeVars = () => {
       //Variables a calcular
       let omegas = { omega1: 0, omega2: 0 };
-
       //IMPLEMENTAR LOS CALCULOS PARA ACOPLADOS
-      let newInertia = calculateInertia(variables.r, variables.l);
-      let newInertia2 = calculateInertia(variables.r2, variables.l2);
+      const newInertia = calculateInertia(variables.r, variables.l);
+      const newInertia2 = calculateInertia(variables.r2, variables.l2);
 
       // Calculamos las frecuencias normales omega_1 y omega_2
-      omegas = coupledCalculations.calculateFrequencies(
+      omegas = coupledCalculations.calculateOmegas(
         newInertia,
         newInertia2,
         dimensions.K,
         dimensions.K2
       );
-      let newInitAmplitude; //A1 A2
-      let newInitAmplitude2; //B1 B2
+      const amplitudeRelation = coupledCalculations.calculateAmplitudeRelation(
+        dimensions.k,
+        omegas.omega1,
+        omegas.omega2
+      );
+      const newInitAmplitude = coupledCalculations.calculateAmplitude(
+        initConditions.position,
+        initConditions.position2,
+        amplitudeRelation.A1_B1,
+        amplitudeRelation.A2_B2
+      ); //A1 A2
+      const newInitAmplitude2 = coupledCalculations.calculateAmplitude2(
+        initConditions.position,
+        initConditions.position2,
+        amplitudeRelation.A1_B1,
+        amplitudeRelation.A2_B2
+      ); //B1 B2
 
-      let strEcuation = "";
-      let strEcuation2 = "";
+      //DEBO REVISAR EN QUE MODO DE VIBRACION ESTA EL SISTEMA
+      setVibrationMode(coupledCalculations.checkVibrationMode());
+
       //(LAS VARIABLES QUE NO SE CALCULAN AUI SE DEJAN EN CERO)
       return {
         InitAmplitude: newInitAmplitude,
