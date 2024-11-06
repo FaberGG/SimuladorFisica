@@ -16,7 +16,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
   const [vibrationMode, setVibrationMode] = useState(0);
 
   //estado para actualizar el string de ecuacion a mostrar
-  const [strEcuation, setstrEcuation] = useState([
+  const [strEcuation, setStrEcuation] = useState([
     "θ(t) = C cos(ω₀ t + ϕ) + C cos(ω₀ t + ϕ)",
     "θ(t) = C cos(ω₀ t + ϕ)",
   ]);
@@ -238,7 +238,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
               setTimeVariables={setTimeVariables}
               setTime={setTime}
               setVibrationMode={setVibrationMode}
-              setstrEcuation={setstrEcuation}
+              setStrEcuation={setStrEcuation}
               position={{
                 position: timeVariables.position,
                 position2: timeVariables.position2,

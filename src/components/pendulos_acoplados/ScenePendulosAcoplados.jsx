@@ -14,7 +14,11 @@ import * as THREE from "three";
 import * as coupledCalculations from "./coupled_calculations/coupledCalculations";
 
 // También importamos calculateInertia del archivo globalCalculations
-import { calculateInertia } from "../pendulo_torsion/motionCalculations/globalCalculations";
+import {
+  calculateInertia,
+  calculatePeriod,
+  calculateFrequency,
+} from "../pendulo_torsion/motionCalculations/globalCalculations";
 
 const ScenePendulo = forwardRef(
   (
@@ -64,6 +68,7 @@ const ScenePendulo = forwardRef(
 
       //esta funcion deberia devolver una cadena con la ecuacion para mostrar
       const strEcuation = coupledCalculations.calculateStrEcuation(
+        time,
         variables.InitAmplitude.A1,
         variables.InitAmplitude.A2,
         variables.omega,
@@ -98,37 +103,37 @@ const ScenePendulo = forwardRef(
 
     //setear todas las variables que no dependen del tiempo al darle el btn de iniciar
     const setAllNoTimeVars = () => {
-      //Variables a calcular
-      let omegas = { omega1: 0, omega2: 0 };
       //IMPLEMENTAR LOS CALCULOS PARA ACOPLADOS
-      const newInertia = calculateInertia(variables.r, variables.l);
-      const newInertia2 = calculateInertia(variables.r2, variables.l2);
+      const newInertia = calculateInertia(dimensions.r, dimensions.l);
+      const newInertia2 = calculateInertia(dimensions.r2, dimensions.l2);
 
       // Calculamos las frecuencias normales omega_1 y omega_2
-      omegas = coupledCalculations.calculateOmegas(
+      const omegas = coupledCalculations.calculateOmegas(
         newInertia,
         newInertia2,
-        dimensions.K,
-        dimensions.K2
+        dimensions.k,
+        dimensions.k2
       );
       const amplitudeRelation = coupledCalculations.calculateAmplitudeRelation(
         dimensions.k,
-        omegas.omega1,
+        omegas.omega,
         omegas.omega2
       );
       const newInitAmplitude = coupledCalculations.calculateAmplitude(
         initConditions.position,
         initConditions.position2,
-        amplitudeRelation.A1_B1,
-        amplitudeRelation.A2_B2
+        amplitudeRelation.M,
+        amplitudeRelation.N
       ); //A1 A2
       const newInitAmplitude2 = coupledCalculations.calculateAmplitude2(
         initConditions.position,
         initConditions.position2,
-        amplitudeRelation.A1_B1,
-        amplitudeRelation.A2_B2
+        amplitudeRelation.M,
+        amplitudeRelation.N
       ); //B1 B2
 
+      const newPeriod = calculatePeriod(variables.omega);
+      const newPeriod2 = calculatePeriod(variables.omega2);
       //DEBO REVISAR EN QUE MODO DE VIBRACION ESTA EL SISTEMA
       setVibrationMode(coupledCalculations.checkVibrationMode());
 
@@ -137,11 +142,11 @@ const ScenePendulo = forwardRef(
         InitAmplitude: newInitAmplitude,
         inertia: newInertia,
         phi: 0,
-        omega: omegas.omega1,
+        omega: omegas.omega,
         omegaD: 0, //no se calcula
         gamma: 0, //no se calcula
-        period: coupledCalculations.calculatePeriod(variables.omega),
-        frecuency: 0,
+        period: newPeriod,
+        frecuency: calculateFrequency(newPeriod),
         delta: 0, //no se calcula
 
         InitAmplitude2: newInitAmplitude2,
@@ -150,8 +155,8 @@ const ScenePendulo = forwardRef(
         omega2: omegas.omega2,
         omegaD2: 0, //no se calcula
         gamma2: 0, //no se calcula
-        period2: coupledCalculations.calculatePeriod(variables.omega2),
-        frecuency2: 0,
+        period2: newPeriod2,
+        frecuency2: calculateFrequency(newPeriod2),
         delta2: 0, //no se calcula
       };
     };
