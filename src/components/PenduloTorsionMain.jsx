@@ -17,8 +17,8 @@ export default function PenduloTorsionMain({ isCoupled }) {
 
   //estado para actualizar el string de ecuacion a mostrar
   const [strEcuation, setStrEcuation] = useState([
-    "θ(t) = C cos(ω₀ t + ϕ) + C cos(ω₀ t + ϕ)",
-    "θ(t) = C cos(ω₀ t + ϕ)",
+    "θ(t) = A1 cos(ω₀ t + ϕ) + A2 cos(ω₀ t + ϕ)",
+    "θ(t) = B1 cos(ω₀ t + ϕ) + B2 cos(ω₀ t + ϕ)",
   ]);
 
   //dimensiones
@@ -107,10 +107,12 @@ export default function PenduloTorsionMain({ isCoupled }) {
     const t = roundDecimal(time, 2);
     let position = roundDecimal(timeVariables.position, 2);
 
-    setPositionData([...positionData, { t, position }]);
+    // Usa la función de actualización en lugar de acceder directamente a positionData
+    setPositionData((prevData) => [...prevData, { t, position }]);
+
     if (isCoupled) {
       position = roundDecimal(timeVariables.position2, 2);
-      setPosition2Data([...position2Data, { t, position }]);
+      setPosition2Data((prevData) => [...prevData, { t, position }]);
     }
   };
   //se llama cuando se cambian las condiciones iniciales en el formulario
@@ -175,6 +177,10 @@ export default function PenduloTorsionMain({ isCoupled }) {
       period2: 0,
       frecuency2: 0,
     });
+    setStrEcuation([
+      "θ(t) = A1 cos(ω₀ t + ϕ) + A2 cos(ω₀ t + ϕ)",
+      "θ(t) = B1 cos(ω₀ t + ϕ) + B2 cos(ω₀ t + ϕ)",
+    ]);
     setTime(0);
     setTimeVariables({
       position: initConditions.position,
@@ -210,6 +216,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
           setShowGuides={setShowGuides}
           showGuides={showGuides}
           isCoupled={isCoupled}
+          vibrationMode={vibrationMode}
         />
 
         <Canvas style={{ display: "flex", height: "100vh" }}>
@@ -257,11 +264,13 @@ export default function PenduloTorsionMain({ isCoupled }) {
           <PositionTimeGraph
             positionData={positionData}
             title={"Péndulo 1: Posición vs Tiempo"}
+            subtitle={"θ1(t) = " + strEcuation[0]}
           />
           {isCoupled && (
             <PositionTimeGraph
               positionData={position2Data}
               title={"Péndulo 2: Posición vs Tiempo"}
+              subtitle={"θ2(t) = " + strEcuation[1]}
             />
           )}
         </div>

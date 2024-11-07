@@ -22,6 +22,7 @@ export const ControlsForm = ({
   setShowGuides,
   showGuides,
   isCoupled,
+  vibrationMode,
 }) => {
   //Auxiliar para llevar seleccion de unidades
   const [inDegrees, setInDegrees] = useState(false);
@@ -94,7 +95,7 @@ export const ControlsForm = ({
   const renderForcedMotionInputs = () => (
     <>
       <FormInput
-        label="Amplitud Fuerza Externa (Fo)"
+        label="Amplitud Fuerza Externa (Fo) [hz]"
         name="Fo"
         value={dimensions.Fo}
         onChange={handleDimensionChange}
@@ -102,7 +103,7 @@ export const ControlsForm = ({
         min={0}
       />
       <FormInput
-        label="Frecuencia Fuerza Externa (ωf)"
+        label="Frecuencia Fuerza Externa (ωf) [hz]"
         name="omegaF"
         value={dimensions.omegaF}
         onChange={handleDimensionChange}
@@ -123,7 +124,7 @@ export const ControlsForm = ({
         onlyLabel={true}
       />
       <FormInput
-        label="Constante de Amortiguamiento (b)"
+        label="Constante de Amortiguamiento (b) [N/m]"
         name="b"
         value={dimensions.b}
         onChange={handleDimensionChange}
@@ -173,7 +174,7 @@ export const ControlsForm = ({
         min={0}
       />
       <FormInput
-        label="Constante de torsión 2 (k2)"
+        label="Constante de torsión 2 (k2) [N/m]"
         name="k2"
         value={dimensions.k2}
         onChange={handleDimensionChange}
@@ -237,7 +238,7 @@ export const ControlsForm = ({
               min={0}
             />
             <FormInput
-              label="Constante de torsión (k)"
+              label="Constante de torsión (k) [N/m]"
               name="k"
               value={dimensions.k}
               onChange={handleDimensionChange}
@@ -305,13 +306,13 @@ export const ControlsForm = ({
           <label className="form-label">
             Ecuación de movimiento {isCoupled ? "(Péndulo 1)" : ""}
           </label>
-          <EcuationLabel ecuation={strEcuation[0]} />
+          <EcuationLabel ecuation={"θ1(t) =" + strEcuation[0]} />
           {isCoupled && (
             <>
               <label className="form-label">
                 Ecuación de movimiento (Péndulo 2)
               </label>
-              <EcuationLabel ecuation={strEcuation[1]} />
+              <EcuationLabel ecuation={"θ2(t) =" + strEcuation[1]} />
             </>
           )}
           {/* Variables del sistema */}
@@ -338,7 +339,7 @@ export const ControlsForm = ({
               disabled={true}
             />
             <FormInput
-              label="Amplitud (θ)"
+              label="Amplitud (θ) (rad)"
               value={timeVariables.amplitude}
               disabled={true}
             />
@@ -348,12 +349,12 @@ export const ControlsForm = ({
               disabled={true}
             />
             <FormInput
-              label="Periodo (T)"
+              label="Periodo (T) [s]"
               value={variables.period}
               disabled={true}
             />
             <FormInput
-              label="Frecuencia (f)"
+              label="Frecuencia (f) [Hz]"
               value={variables.frecuency}
               disabled={true}
             />
@@ -361,6 +362,15 @@ export const ControlsForm = ({
             {/* en caso de tener pendulos acoplados */}
             {isCoupled && (
               <>
+                <FormInput
+                  label={`Modo de vibracion: ${
+                    vibrationMode == 0 ? "No hay modo" : vibrationMode
+                  }`}
+                  value={0}
+                  name="vibrationMode"
+                  disabled={true}
+                  onlyLabel={true}
+                />
                 <FormInput
                   label="Posición (Rad) Péndulo 2"
                   value={timeVariables.position2}

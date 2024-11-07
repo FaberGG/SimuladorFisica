@@ -117,7 +117,8 @@ const ScenePendulo = forwardRef(
       const amplitudeRelation = coupledCalculations.calculateAmplitudeRelation(
         dimensions.k,
         omegas.omega,
-        omegas.omega2
+        omegas.omega2,
+        newInertia
       );
       const newInitAmplitude = coupledCalculations.calculateAmplitude(
         initConditions.position,
@@ -132,10 +133,15 @@ const ScenePendulo = forwardRef(
         amplitudeRelation.N
       ); //B1 B2
 
-      const newPeriod = calculatePeriod(variables.omega);
-      const newPeriod2 = calculatePeriod(variables.omega2);
+      const newPeriod = calculatePeriod(omegas.omega);
+      const newPeriod2 = calculatePeriod(omegas.omega2);
       //DEBO REVISAR EN QUE MODO DE VIBRACION ESTA EL SISTEMA
-      setVibrationMode(coupledCalculations.checkVibrationMode());
+      setVibrationMode(
+        coupledCalculations.checkVibrationMode(
+          amplitudeRelation.M,
+          amplitudeRelation.N
+        )
+      );
 
       //(LAS VARIABLES QUE NO SE CALCULAN AUI SE DEJAN EN CERO)
       return {

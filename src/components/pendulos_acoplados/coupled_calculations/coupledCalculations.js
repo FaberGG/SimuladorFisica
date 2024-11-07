@@ -1,15 +1,30 @@
-export const checkVibrationMode = () => {
-  //devuelve 1 para el primer modo
-  //devuelve 2 para el segundo modo
-  //devuelve 0 para ninguno
-  return 1;
+import { roundDecimal } from "../../pendulo_torsion/motionCalculations/globalCalculations";
+
+export const checkVibrationMode = (M, N) => {
+  console.log([M, N]);
+
+  // Definimos un margen de tolerancia para comparar valores
+  const tolerance = 0.4;
+
+  // Verificar si estamos en el primer modo (en fase)
+  if (Math.abs(M - 1) < tolerance && Math.abs(N - 1) < tolerance) {
+    return 1;
+  }
+
+  // Verificar si estamos en el segundo modo (fuera de fase)
+  if (Math.abs(M - 1) < tolerance && Math.abs(N + 1) < tolerance) {
+    return 2;
+  }
+
+  // Si no coincide con ninguno de los modos, devolvemos 0
+  return 0;
 };
 
 // Función para resolver la ecuación cuadrática y calcular las frecuencias normales omega_1 y omega_2
 export function calculateOmegas(inertia, inertia2, K1, K2) {
   let omega = Math.sqrt(
     (2 * inertia2 * K1 +
-      inertia * K2 +
+      inertia * K2 -
       Math.sqrt(
         4 * Math.pow(inertia2, 2) * Math.pow(K1, 2) +
           Math.pow(inertia, 2) * Math.pow(K2, 2)
@@ -18,7 +33,7 @@ export function calculateOmegas(inertia, inertia2, K1, K2) {
   );
   let omega2 = Math.sqrt(
     (2 * inertia2 * K1 +
-      inertia * K2 -
+      inertia * K2 +
       Math.sqrt(
         4 * Math.pow(inertia2, 2) * Math.pow(K1, 2) +
           Math.pow(inertia, 2) * Math.pow(K2, 2)
@@ -30,12 +45,12 @@ export function calculateOmegas(inertia, inertia2, K1, K2) {
 }
 
 // Exportamos la función para calcular las relaciones entre amplitudes A1/B1 y A2/B2
-export const calculateAmplitudeRelation = (k, omega, omega2) => {
+export const calculateAmplitudeRelation = (k, omega, omega2, inertia) => {
   // Relación de amplitud para el primer modo normal: A1 / B1
-  const M = k / (2 * k - Math.pow(omega, 2));
+  const M = k / (2 * k - Math.pow(omega, 2) / inertia);
 
   // Relación de amplitud para el segundo modo normal: A2 / B2
-  const N = k / (2 * k - Math.pow(omega2, 2));
+  const N = k / (2 * k - Math.pow(omega2, 2) / inertia);
 
   // Devolvemos un objeto con las relaciones de amplitud
   return {
@@ -71,13 +86,14 @@ export function position2(time, B1, B2, omega, omega2, phi) {
   return B1 * Math.cos(omega * time + phi) + B2 * Math.cos(omega2 * time + phi);
 }
 
-//Calcular la ecuacion de movimiento a mostrar (en string)
-export const calculateStrEcuation = (time, A, B, omega1, omega2, phi) => {
-  //Para acoplado, phi = 0
-  //A, B puede ser A1 A2 cuando es el pendulo 1
-  //A, B puede ser B1 B2 cuando es el pendulo 2
-  // (las variables correspondientes se pasan en los parametros)
+export const calculateStrEcuation = (time, A, B, omega, omega2, phi = 0) => {
+  const time_r = roundDecimal(time, 2);
+  const omega_r = roundDecimal(omega, 2);
+  const omega2_r = roundDecimal(omega2, 2);
+  const A_r = roundDecimal(A, 2);
+  const B_r = roundDecimal(B, 2);
 
-  let strEcuation = "NO IMPLEMENTADO";
+  let strEcuation = `${A_r} * cos(${omega_r} * ${time_r} + ${phi}) + ${B_r} * cos(${omega2_r} * ${time_r} + ${phi})`;
+
   return strEcuation;
 };

@@ -25,7 +25,7 @@ div#root {
 .graph-container {
   display: flex;
   flex-direction: column;
-  width: 40%; /* Adjust width as needed */
+  width: 35%;
   padding: 3%;
 }
 
