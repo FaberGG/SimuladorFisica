@@ -306,7 +306,9 @@ export const ControlsForm = ({
           <label className="form-label">
             Ecuación de movimiento {isCoupled ? "(Péndulo 1)" : ""}
           </label>
-          <EcuationLabel ecuation={"θ1(t) =" + strEcuation[0]} />
+          <EcuationLabel
+            ecuation={isCoupled ? "θ1(t) =" : "" + strEcuation[0]}
+          />
           {isCoupled && (
             <>
               <label className="form-label">
@@ -362,9 +364,10 @@ export const ControlsForm = ({
             {/* en caso de tener pendulos acoplados */}
             {isCoupled && (
               <>
+                <label className="form-label">Pendulo 2</label>
                 <FormInput
                   label={`Modo de vibracion: ${
-                    vibrationMode == 0 ? "No hay modo" : vibrationMode
+                    vibrationMode == 0 ? "Combinacion lineal" : vibrationMode
                   }`}
                   value={0}
                   name="vibrationMode"

@@ -1,5 +1,9 @@
 //funcion para calcular el cuadrante
-import { changeQuadrant, checkQuadrant } from "./globalCalculations";
+import {
+  changeQuadrant,
+  checkQuadrant,
+  roundDecimal,
+} from "./globalCalculations";
 export * from "./globalCalculations";
 
 // SECCION CONDICIONES INICIALES
@@ -92,7 +96,9 @@ export const calculatePhi = (initPosition, initVelocity, omegaD, gamma) => {
   }
 
   //calculo la arco-tangente
-  phi = Math.abs(Math.atan(-gamma / omegaD - initVelocity / (omegaD * initPosition)));
+  phi = Math.abs(
+    Math.atan(-gamma / omegaD - initVelocity / (omegaD * initPosition))
+  );
 
   //calculo el valor de la restriccion
   if (initPosition > 0) {
@@ -178,4 +184,49 @@ export const calculateEnergy = (velocity, position, inertia, k) => {
   //Si es subdamped{
   //}else { }
   return 0.5 * (inertia * Math.pow(velocity, 2) + k * Math.pow(position, 2));
+};
+export const calculateStrEcuation = (
+  time,
+  initAmplitude,
+  omega,
+  omegaD,
+  gamma,
+  phi,
+  dampedType
+) => {
+  const t = roundDecimal(time, 2);
+  const w = roundDecimal(omega, 2);
+  const wD = roundDecimal(omegaD, 2);
+  const g = roundDecimal(gamma, 2);
+  const p = roundDecimal(phi, 2);
+
+  switch (dampedType) {
+    case "criticallyDamped":
+      // Ecuación de movimiento para el caso de amortiguamiento crítico
+      const c1 = roundDecimal(initAmplitude.c1, 2);
+      const c2 = roundDecimal(initAmplitude.c2, 2);
+      return `(${c1} + ${c2} * ${t}) * exp(-${g} * ${t})`;
+
+    case "subDamped":
+      // Ecuación de movimiento para el caso de sub-amortiguamiento
+      const A = roundDecimal(initAmplitude, 2);
+      return `${A} * exp(-${g} * ${t}) * cos(${wD} * ${t} + ${p})`;
+
+    case "overDamped":
+      // Ecuación de movimiento para el caso de sobre-amortiguamiento
+      const c1Over = roundDecimal(initAmplitude.c1, 2);
+      const c2Over = roundDecimal(initAmplitude.c2, 2);
+      const root1 = roundDecimal(
+        -g + Math.sqrt(Math.pow(g, 2) - Math.pow(w, 2)),
+        2
+      );
+      const root2 = roundDecimal(
+        -g - Math.sqrt(Math.pow(g, 2) - Math.pow(w, 2)),
+        2
+      );
+      return `${c1Over} * exp(${root1} * ${t}) + ${c2Over} * exp(${root2} * ${t})`;
+
+    default:
+      return "Invalid damping type";
+  }
 };

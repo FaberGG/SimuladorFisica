@@ -1,4 +1,4 @@
-import { changeQuadrant } from "./globalCalculations";
+import { changeQuadrant, roundDecimal } from "./globalCalculations";
 export * from "./globalCalculations";
 
 export function calculatePhi(initPosition, initVelocity, omega) {
@@ -51,3 +51,12 @@ export function calculateEnergy(velocity, position, inertia, k) {
   // Parámetros: definir los parametros
   return 0.5 * (inertia * Math.pow(velocity, 2) + k * Math.pow(position, 2));
 }
+
+export const calculateStrEcuation = (time, initAmplitude, phi, omega) => {
+  const A = roundDecimal(initAmplitude, 2);
+  const t = roundDecimal(time, 2);
+  const w = roundDecimal(omega, 2);
+  const p = roundDecimal(phi, 2);
+
+  return `${A} * cos(${w} * ${t} + ${p})`;
+};

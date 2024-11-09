@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import "./styles/FormInput.css";
+import { string } from "three/webgpu";
 
 export const FormInput = ({
   label,
@@ -10,11 +11,13 @@ export const FormInput = ({
   min,
   onlyLabel,
 }) => {
+  const [isFocused, setIsFocused] = useState(false);
+
   function roundDecimal(numero, decimales) {
     const factor = 10 ** decimales;
     return Math.round(numero * factor) / factor;
   }
-  // Función para redondear todos los valores numéricos en un objeto
+
   function redondearValoresObj(obj, decimales) {
     const resultado = {};
 
@@ -22,15 +25,15 @@ export const FormInput = ({
       if (typeof obj[key] === "number") {
         resultado[key] = roundDecimal(obj[key], decimales);
       } else {
-        resultado[key] = obj[key]; // Mantener otros valores sin cambios
+        resultado[key] = obj[key];
       }
     }
 
     return resultado;
   }
-  // Función para desactivar el scroll sobre el input
+
   const handleWheel = (e) => {
-    e.target.blur(); // Desenfoca el input cuando se usa la rueda del mouse
+    e.target.blur();
   };
 
   return (
@@ -43,7 +46,7 @@ export const FormInput = ({
           {typeof value == "object" ? (
             <input
               value={JSON.stringify(redondearValoresObj(value, 4))}
-              placeholder={value == NaN ? "No Calculado aun" : ""}
+              placeholder={isNaN(value) ? "No Calculado aun" : ""}
               type="text"
               id={name}
               name={name}
@@ -54,8 +57,12 @@ export const FormInput = ({
             />
           ) : (
             <input
-              value={value == 0 ? "" : roundDecimal(value, 4)}
-              placeholder={value == 0 ? "0" : ""}
+              value={
+                isFocused && string(value) === "0" ? "" : roundDecimal(value, 6)
+              }
+              placeholder="0"
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
               onChange={(e) => onChange(name, e.target.value)}
               type="number"
               id={name}

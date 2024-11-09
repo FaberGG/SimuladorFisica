@@ -1,22 +1,15 @@
 import { roundDecimal } from "../../pendulo_torsion/motionCalculations/globalCalculations";
 
-export const checkVibrationMode = (M, N) => {
-  console.log([M, N]);
-
-  // Definimos un margen de tolerancia para comparar valores
-  const tolerance = 0.4;
-
-  // Verificar si estamos en el primer modo (en fase)
-  if (Math.abs(M - 1) < tolerance && Math.abs(N - 1) < tolerance) {
-    return 1;
+export const checkVibrationMode = (A1, A2, B1, B2) => {
+  // Verificar si estamos en el modo en oposición (Modo 2)
+  if (roundDecimal(A1, 2) == 0 && roundDecimal(B1, 2) == 0) {
+    return 2; // Modo en oposición
   }
 
-  // Verificar si estamos en el segundo modo (fuera de fase)
-  if (Math.abs(M - 1) < tolerance && Math.abs(N + 1) < tolerance) {
-    return 2;
+  // Verificar si estamos en el modo en fase (Modo 1)
+  if (roundDecimal(A2, 2) == 0 && roundDecimal(B2, 2) == 0) {
+    return 1; // Modo en fase
   }
-
-  // Si no coincide con ninguno de los modos, devolvemos 0
   return 0;
 };
 
@@ -40,18 +33,27 @@ export function calculateOmegas(inertia, inertia2, K1, K2) {
       )) /
       (2 * inertia * inertia2)
   );
-
+  console.log({
+    description: "omegas elevados al cuadrado",
+    omega_pow2: Math.pow(omega, 2),
+    omega2_pow2: Math.pow(omega2, 2),
+  });
   return { omega: omega, omega2: omega2 };
 }
 
 // Exportamos la función para calcular las relaciones entre amplitudes A1/B1 y A2/B2
 export const calculateAmplitudeRelation = (k, omega, omega2, inertia) => {
   // Relación de amplitud para el primer modo normal: A1 / B1
-  const M = k / (2 * k - Math.pow(omega, 2) / inertia);
+  const M = k / (2 * k - Math.pow(omega, 2) * inertia);
 
   // Relación de amplitud para el segundo modo normal: A2 / B2
-  const N = k / (2 * k - Math.pow(omega2, 2) / inertia);
+  const N = k / (2 * k - Math.pow(omega2, 2) * inertia);
 
+  console.log({
+    description: "Relacion entre amplitudes A1/B1=M, A2/B2=N",
+    M: M,
+    N: N,
+  });
   // Devolvemos un objeto con las relaciones de amplitud
   return {
     M: M,
@@ -59,16 +61,17 @@ export const calculateAmplitudeRelation = (k, omega, omega2, inertia) => {
   };
 };
 
-const auxCalculateA1 = (initPosition, initPosition2, M, N) => {
+const auxCalculateA2 = (initPosition, initPosition2, M, N) => {
   return (M * initPosition2 - initPosition) / (M / N - 1);
 };
 export const calculateAmplitude = (initPosition, initPosition2, M, N) => {
-  const A2 = auxCalculateA1(initPosition, initPosition2, M, N);
+  const A2 = auxCalculateA2(initPosition, initPosition2, M, N);
   const A1 = initPosition - A2;
+
   return { A1: A1, A2: A2 };
 };
 export const calculateAmplitude2 = (initPosition, initPosition2, M, N) => {
-  const A2 = auxCalculateA1(initPosition, initPosition2, M, N);
+  const A2 = auxCalculateA2(initPosition, initPosition2, M, N);
   const A1 = initPosition - A2;
 
   const B1 = A1 / M;

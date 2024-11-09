@@ -24,6 +24,7 @@ const ScenePendulo = forwardRef(
       setDampedType,
       setTimeVariables,
       setTime,
+      setStrEcuation,
       position,
       updateDataGraph,
       isAnimating,
@@ -56,6 +57,7 @@ const ScenePendulo = forwardRef(
         newVelocity = 0,
         newAmplitude = 0,
         newEnergy = 0;
+      let strEcuation;
 
       switch (motionType) {
         case "simple":
@@ -76,6 +78,12 @@ const ScenePendulo = forwardRef(
             newPosition,
             variables.inertia,
             dimensions.k
+          );
+          strEcuation = motionCalculations.calculateStrEcuation(
+            time,
+            variables.InitAmplitude,
+            variables.phi,
+            variables.omega
           );
           newAmplitude = variables.InitAmplitude;
           break;
@@ -103,6 +111,15 @@ const ScenePendulo = forwardRef(
             newPosition,
             variables.inertia,
             dimensions.k
+          );
+          strEcuation = motionCalculations.calculateStrEcuation(
+            time,
+            variables.InitAmplitude,
+            variables.omega,
+            variables.omegaD,
+            variables.gamma,
+            variables.phi,
+            dampedType
           );
           break;
 
@@ -135,6 +152,14 @@ const ScenePendulo = forwardRef(
                 variables.InitAmplitude
               )
             : variables.InitAmplitude;
+          strEcuation = motionCalculations.calculateStrEcuation(
+            time,
+            variables.InitAmplitude,
+            variables.phi,
+            variables.omega,
+            dimensions.omegaF
+          );
+
           break;
 
         case "forcedDamped":
@@ -157,6 +182,13 @@ const ScenePendulo = forwardRef(
             time,
             variables.InitAmplitude
           );
+          strEcuation = motionCalculations.calculateStrEcuation(
+            time,
+            variables.omega,
+            dimensions.omegaF,
+            variables.InitAmplitude,
+            variables.phi
+          );
           break;
 
         default:
@@ -167,7 +199,7 @@ const ScenePendulo = forwardRef(
           );
           return;
       }
-
+      setStrEcuation([strEcuation]);
       setTimeVariables({
         position: newPosition,
         velocity: newVelocity,

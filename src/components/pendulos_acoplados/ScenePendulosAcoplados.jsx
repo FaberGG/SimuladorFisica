@@ -106,7 +106,6 @@ const ScenePendulo = forwardRef(
       //IMPLEMENTAR LOS CALCULOS PARA ACOPLADOS
       const newInertia = calculateInertia(dimensions.r, dimensions.l);
       const newInertia2 = calculateInertia(dimensions.r2, dimensions.l2);
-
       // Calculamos las frecuencias normales omega_1 y omega_2
       const omegas = coupledCalculations.calculateOmegas(
         newInertia,
@@ -138,8 +137,10 @@ const ScenePendulo = forwardRef(
       //DEBO REVISAR EN QUE MODO DE VIBRACION ESTA EL SISTEMA
       setVibrationMode(
         coupledCalculations.checkVibrationMode(
-          amplitudeRelation.M,
-          amplitudeRelation.N
+          newInitAmplitude.A1,
+          newInitAmplitude.A2,
+          newInitAmplitude2.B1,
+          newInitAmplitude2.B2
         )
       );
 

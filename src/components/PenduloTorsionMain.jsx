@@ -17,8 +17,10 @@ export default function PenduloTorsionMain({ isCoupled }) {
 
   //estado para actualizar el string de ecuacion a mostrar
   const [strEcuation, setStrEcuation] = useState([
-    "θ(t) = A1 cos(ω₀ t + ϕ) + A2 cos(ω₀ t + ϕ)",
-    "θ(t) = B1 cos(ω₀ t + ϕ) + B2 cos(ω₀ t + ϕ)",
+    isCoupled
+      ? "θ(t) = A1 cos(ω1 t + ϕ) + A2 cos(ω2 t + ϕ)"
+      : "θ(t) = A cos(ω1 t + ϕ)",
+    isCoupled ? "θ(t) = B1 cos(ω1 t + ϕ) + B2 cos(ω2 t + ϕ)" : undefined,
   ]);
 
   //dimensiones
@@ -105,13 +107,13 @@ export default function PenduloTorsionMain({ isCoupled }) {
   //FUNCION LLAMADA DESDE LA ESCENA PARA LLENAR EL ARREGLO DE DATOS PARA LA GRAFICA
   const updateDataGraph = () => {
     const t = roundDecimal(time, 2);
-    let position = roundDecimal(timeVariables.position, 2);
+    let position = roundDecimal(timeVariables.position, 4);
 
     // Usa la función de actualización en lugar de acceder directamente a positionData
     setPositionData((prevData) => [...prevData, { t, position }]);
 
     if (isCoupled) {
-      position = roundDecimal(timeVariables.position2, 2);
+      const position = roundDecimal(timeVariables.position2, 4);
       setPosition2Data((prevData) => [...prevData, { t, position }]);
     }
   };
@@ -177,10 +179,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
       period2: 0,
       frecuency2: 0,
     });
-    setStrEcuation([
-      "θ(t) = A1 cos(ω₀ t + ϕ) + A2 cos(ω₀ t + ϕ)",
-      "θ(t) = B1 cos(ω₀ t + ϕ) + B2 cos(ω₀ t + ϕ)",
-    ]);
+    setStrEcuation(["No calculado aun", "No calculado aun"]);
     setTime(0);
     setTimeVariables({
       position: initConditions.position,
@@ -230,6 +229,7 @@ export default function PenduloTorsionMain({ isCoupled }) {
               setDampedType={setDampedType}
               setTimeVariables={setTimeVariables}
               setTime={setTime}
+              setStrEcuation={setStrEcuation}
               position={timeVariables.position}
               updateDataGraph={updateDataGraph}
               isAnimating={isAnimating}
@@ -260,20 +260,24 @@ export default function PenduloTorsionMain({ isCoupled }) {
         </Canvas>
 
         {/* GRAFICAS */}
-        <div className="graph-container">
-          <PositionTimeGraph
-            positionData={positionData}
-            title={"Péndulo 1: Posición vs Tiempo"}
-            subtitle={"θ1(t) = " + strEcuation[0]}
-          />
-          {isCoupled && (
-            <PositionTimeGraph
-              positionData={position2Data}
-              title={"Péndulo 2: Posición vs Tiempo"}
-              subtitle={"θ2(t) = " + strEcuation[1]}
-            />
-          )}
-        </div>
+        {showGuides && (
+          <>
+            <div className="graph-container">
+              <PositionTimeGraph
+                positionData={positionData}
+                title={"Péndulo 1: Posición vs Tiempo"}
+                subtitle={"θ1(t) = " + strEcuation[0]}
+              />
+              {isCoupled && (
+                <PositionTimeGraph
+                  positionData={position2Data}
+                  title={"Péndulo 2: Posición vs Tiempo"}
+                  subtitle={"θ2(t) = " + strEcuation[1]}
+                />
+              )}
+            </div>
+          </>
+        )}
       </div>
     </>
   );

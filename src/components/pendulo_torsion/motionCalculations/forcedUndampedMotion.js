@@ -128,3 +128,27 @@ export const calculateEnergy = (time, initAmplitude, omegaF, Fo) => {
     -Fo * initAmplitude.A * omegaF * (Math.sin(2 * omegaF * time) / 2);
   return Potencia;
 };
+
+export const calculateStrEcuation = (
+  time,
+  initAmplitude,
+  phi,
+  omega,
+  omegaF
+) => {
+  const t = roundDecimal(time, 2);
+  const w = roundDecimal(omega, 2);
+  const wF = roundDecimal(omegaF, 2);
+  const A = roundDecimal(initAmplitude.A, 2);
+  const C = roundDecimal(initAmplitude.C, 2);
+  const p = roundDecimal(phi, 2);
+  const delta = wF < w ? 0 : Math.PI; // Ajuste de fase para fuera de resonancia
+
+  if (checkResonance(omega, omegaF)) {
+    // Caso en resonancia: combinación de un MAS con un término lineal en tiempo
+    return `${A} * cos(${w} * ${t} + ${p}) + ${C} * ${t} * sin(${w} * ${t})`;
+  } else {
+    // Caso fuera de resonancia: suma de movimiento natural y forzado
+    return `${A} * cos(${w} * ${t} + ${p}) + ${C} * cos(${wF} * ${t} + ${delta})`;
+  }
+};
