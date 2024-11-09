@@ -1,6 +1,11 @@
-# Simulador de Física
+# Simulador de Físico - Pendulos de Torsíon
 
-Este es un simulador de física desarrollado con React y Vite. Permite a los usuarios visualizar y experimentar con conceptos físicos de manera interactiva.
+Este es un simulador de física desarrollado con React y Vite.
+Permite observar a detalle el comportamiento de un pendulo  de tosión oscilando en diferentes entornos, incluso acoplado a otro pendulo de torsión.
+
+## Despliegue en GitHub Pages
+usando el enlace a la pagina en gt pages puede acceder e interactuar con el programa en cualquier momento en caso de estar disponible a la fecha
+[Prueba la aplicacion](https://fabergg.github.io/SimuladorFisica/)
 
 ## Tabla de Contenidos
 
@@ -13,10 +18,24 @@ Este es un simulador de física desarrollado con React y Vite. Permite a los usu
 - [Tecnologías Usadas](#tecnologías-usadas)
 
 ## Características
+- Simulaciones interactivas sobre vibracones y sus modos.
+- Graficas en tiempo real del movimiento del pendulo
+- Diferentes modos de movimiento (armonico simple, amortiguado, forzado)
+- Interfaz de usuario intuitiva, con posibilidad de cambiar parametros y visualizar los valores calculados.
+### Pendulo de torsion en diferentes modos de movimiento
+El programa permite seleccionar entre los 4 diferentes tipos de movimiento
+-armonico simple
+-Amortiguado
+-Forzado no amortiguado
+-Forzado amortiguado
+Adicionalmente permite cambiar valores de posicion inicial, dimensiones y constantes
+![Pendulo Torsion](src/components/assets/pendulo-torsion.png)
+### Pendulos de torsion acoplados
+Se modelan pendulos acoplados y se calculan las posiciones para cada pendulo independiente
+Se muestran las graficas asi como los valores obtenidos.
+Se muestra el modo de vibracion (siincronico/asincronico)
+![Pendulo Torsion](src/components/assets/pendulos-acoplados.png)
 
-- Simulaciones interactivas de fenómenos físicos.
-- Interfaz de usuario intuitiva.
-- Código modular y fácil de mantener.
 
 ## Requisitos
 
